@@ -23,7 +23,9 @@ class EditorView extends React.Component {
   render() {
     return (
       <div>
-        <p>HEYYY THIS IS EDITOR VIEW</p>
+        <h1>sampleDocumnent(unimplemented)</h1>
+        <p>Shareable Document ID: 123456789(unimplemented)</p>
+        <button>Save Changes (unimplemented)</button>
         {/* <button onClick={this._onBoldClick.bind(this)}>Bold</button> */}
         <Editor editorState={this.state.editorState} onChange={this.onChange}/>
         <Toolbox clickHandler={(btn) => this.clickHandler(btn)}/>
