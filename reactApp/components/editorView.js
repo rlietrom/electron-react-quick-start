@@ -13,12 +13,6 @@ class EditorView extends React.Component {
     this.onChange = (editorState) => this.setState({editorState});
   }
 
-  const styleMap = {
-    'STRIKETHROUGH': {
-      textDecoration: 'line-through',
-    }
-  };
-
   clickHandler(btn) {
     if(btn === 'BOLD'){
       this.onChange(RichUtils.toggleInlineStyle(this.state.editorState, 'BOLD'));
@@ -37,8 +31,6 @@ class EditorView extends React.Component {
     }
   }
 
-
-
   render() {
     return (
       <div>
@@ -53,6 +45,12 @@ class EditorView extends React.Component {
         <Toolbox clickHandler={(btn) => this.clickHandler(btn)}/>
       </div>
     )
+  }
+}
+
+const styleMap = {
+  'STRIKETHROUGH': {
+    textDecoration: 'line-through',
   }
 }
 
