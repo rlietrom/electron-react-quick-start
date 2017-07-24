@@ -20,12 +20,6 @@ class EditorView extends React.Component {
     }
   }
 
-
-  // _onBoldClick() {
-  //   this.onChange(RichUtils.toggleInlineStyle(this.state.editorState, 'BOLD'));
-  // }
-
-
   render() {
     return (
       <div>
