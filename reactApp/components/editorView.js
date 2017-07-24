@@ -2,6 +2,7 @@ var React = require('react');
 var Toolbox = require('./toolbox');
 var ReactDOM = require('react-dom');
 var {RichUtils, Editor, EditorState} = require('draft-js');
+//import styles from '../styles.css';
 
 class EditorView extends React.Component {
   constructor(props) {
