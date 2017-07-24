@@ -31,7 +31,10 @@ class EditorView extends React.Component {
       <div>
         <p>HEYYY THIS IS EDITOR VIEW</p>
         {/* <button onClick={this._onBoldClick.bind(this)}>Bold</button> */}
-        <Editor editorState={this.state.editorState} onChange={this.onChange}/>
+        <div className='editor'>
+        <Editor
+          editorState={this.state.editorState} onChange={this.onChange}/>
+        </div>
         <Toolbox clickHandler={(btn) => this.clickHandler(btn)}/>
       </div>
     )
