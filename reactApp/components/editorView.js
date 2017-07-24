@@ -13,19 +13,23 @@ class EditorView extends React.Component {
 
   }
 
-  function clickHandler(btn) {
-    if(btn === "bold"){
+   clickHandler(btn) {
+    if(btn === "BOLD"){
       this.onChange(RichUtils.toggleInlineStyle(this.state.editorState, 'BOLD'));
     }
   }
 
 
+  // _onBoldClick() {
+  //   this.onChange(RichUtils.toggleInlineStyle(this.state.editorState, 'BOLD'));
+  // }
 
 
   render() {
     return (
       <div>
         <p>HEYYY THIS IS EDITOR VIEW</p>
+        {/* <button onClick={this._onBoldClick.bind(this)}>Bold</button> */}
         <Editor editorState={this.state.editorState} onChange={this.onChange}/>
         <Toolbox clickHandler={(btn) => this.clickHandler(btn)}/>
       </div>

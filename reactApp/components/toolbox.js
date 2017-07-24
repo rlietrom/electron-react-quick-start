@@ -7,7 +7,11 @@ class Toolbox extends React.Component {
 
   render() {
     return(
-      <div>This is toolbox</div>
+      <div>
+        <button onClick={() => this.props.clickHandler("BOLD").bind(this)}>Bold</button>
+        {/* <button onClick={() => this.props.clickHandler("ITALICS")}/> */}
+        <div>This is toolbox</div>
+      </div>
     )
   }
 }
