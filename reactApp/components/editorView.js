@@ -2,6 +2,7 @@ var React = require('react');
 var Toolbox = require('./toolbox');
 var ReactDOM = require('react-dom');
 var {Editor, EditorState} = require('draft-js');
+//import styles from '../styles.css';
 
 class EditorView extends React.Component {
   constructor(props) {
@@ -16,8 +17,11 @@ class EditorView extends React.Component {
     return (
       <div>
         <p>HEYYY THIS IS EDITOR VIEW</p>
-        <Editor editorState={this.state.editorState} onChange={this.onChange}/>
-        <Toolbox/>
+        <div className="box">
+        <Editor
+          editorState={this.state.editorState} onChange={this.onChange}/>
+        </div>
+        <Toolbox />
       </div>
     )
   }
