@@ -1,7 +1,7 @@
 var React = require('react');
 var Toolbox = require('./toolbox');
 var ReactDOM = require('react-dom');
-var {Editor, EditorState} = require('draft-js');
+var {RichUtils, Editor, EditorState} = require('draft-js');
 
 class EditorView extends React.Component {
   constructor(props) {
@@ -10,14 +10,24 @@ class EditorView extends React.Component {
       editorState: EditorState.createEmpty()
     }
     this.onChange = (editorState) => this.setState({editorState});
+
   }
+
+  function clickHandler(btn) {
+    if(btn === "bold"){
+      this.onChange(RichUtils.toggleInlineStyle(this.state.editorState, 'BOLD'));
+    }
+  }
+
+
+
 
   render() {
     return (
       <div>
         <p>HEYYY THIS IS EDITOR VIEW</p>
         <Editor editorState={this.state.editorState} onChange={this.onChange}/>
-        <Toolbox/>
+        <Toolbox clickHandler={(btn) => this.clickHandler(btn)}/>
       </div>
     )
   }
