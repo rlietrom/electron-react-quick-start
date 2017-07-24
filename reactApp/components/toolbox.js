@@ -13,7 +13,7 @@ class Toolbox extends React.Component {
         <button onClick={() => this.props.clickHandler("UNDERLINE")}>U</button>
         <button onClick={() => this.props.clickHandler("CODE")}>code</button>
         <button onClick={() => this.props.clickHandler("STRIKETHROUGH")}>strike</button>
-        <button onClick={() => this.props.clickHandler(“PINK”)}>pink</button>
+        <button onClick={() => this.props.clickHandler("PINK")}>pink</button>
         <div>This is toolbox</div>
       </div>
     )

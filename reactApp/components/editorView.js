@@ -29,8 +29,8 @@ class EditorView extends React.Component {
     if(btn === 'STRIKETHROUGH'){
       this.onChange(RichUtils.toggleInlineStyle(this.state.editorState, 'STRIKETHROUGH'));
     }
-    if(btn === ‘PINK’){
-      this.onChange(RichUtils.toggleInlineStyle(this.state.editorState, ‘PINK’));
+    if(btn === 'PINK'){
+      this.onChange(RichUtils.toggleInlineStyle(this.state.editorState, 'PINK'));
     }
   }
 
@@ -56,9 +56,9 @@ class EditorView extends React.Component {
 const styleMap = {
   'STRIKETHROUGH': {
     textDecoration: 'line-through',
-  }
-  ‘PINK’: {
-    color: ‘#F176A7 ’
+  },
+  'PINK': {
+    color: '#F176A7'
   }
 }
 
