@@ -8,11 +8,12 @@ class Toolbox extends React.Component {
   render() {
     return(
       <div>
-        <button onClick={() => this.props.clickHandler("BOLD").bind(this)}>B</button>
-        <button onClick={() => this.props.clickHandler("ITALIC").bind(this)}>I</button>
-        <button onClick={() => this.props.clickHandler("UNDERLINE").bind(this)}>U</button>
-        <button onClick={() => this.props.clickHandler("CODE").bind(this)}>code</button>
-        <button onClick={() => this.props.clickHandler("STRIKETHROUGH").bind(this)}>strike</button>
+        <button onClick={() => this.props.clickHandler("BOLD")}>B</button>
+        <button onClick={() => this.props.clickHandler("ITALIC")}>I</button>
+        <button onClick={() => this.props.clickHandler("UNDERLINE")}>U</button>
+        <button onClick={() => this.props.clickHandler("CODE")}>code</button>
+        <button onClick={() => this.props.clickHandler("STRIKETHROUGH")}>strike</button>
+        <button onClick={() => this.props.clickHandler("PINK")}>pink</button>
         <div>This is toolbox</div>
       </div>
     )

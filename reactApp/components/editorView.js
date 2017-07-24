@@ -2,6 +2,15 @@ var React = require('react');
 var Toolbox = require('./toolbox');
 var ReactDOM = require('react-dom');
 var {Editor, EditorState, RichUtils} = require('draft-js');
+
+const styleMap = {
+  'STRIKETHROUGH': {
+    textDecoration: 'line-through',
+  },
+  'PINK': {
+    color: '#F176A7'
+  }
+};
 //import styles from '../styles.css';
 
 class EditorView extends React.Component {
@@ -12,12 +21,6 @@ class EditorView extends React.Component {
     }
     this.onChange = (editorState) => this.setState({editorState});
   }
-
-  const styleMap = {
-    'STRIKETHROUGH': {
-      textDecoration: 'line-through',
-    }
-  };
 
   clickHandler(btn) {
     if(btn === 'BOLD'){
@@ -34,6 +37,9 @@ class EditorView extends React.Component {
     }
     if(btn === 'STRIKETHROUGH'){
       this.onChange(RichUtils.toggleInlineStyle(this.state.editorState, 'STRIKETHROUGH'));
+    }
+    if(btn === 'PINK'){
+      this.onChange(RichUtils.toggleInlineStyle(this.state.editorState, 'PINK'));
     }
   }
 
