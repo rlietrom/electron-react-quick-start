@@ -11,5 +11,5 @@ var Portal = require('./components/portal');
 // .then(text => console.log(text))
 // .catch(err => {throw err})
 
-ReactDOM.render(<Portal/>,
+ReactDOM.render(<EditorView/>,
    document.getElementById('root'));
