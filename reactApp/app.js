@@ -1,5 +1,6 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
+import {Route, HashRouter, BrowserRouter} from 'react-router-dom';
 var EditorView = require('./components/editorView');
 var Login = require('./components/login');
 var Registration = require('./components/registration');
@@ -11,5 +12,11 @@ var Portal = require('./components/portal');
 // .then(text => console.log(text))
 // .catch(err => {throw err})
 
-ReactDOM.render(<EditorView/>,
+ReactDOM.render(
+  <HashRouter>
+    <div>
+      <Route path='/register' component={Registration}/>
+      <Route path='/login' component={Login}/>
+    </div>
+  </HashRouter>,
    document.getElementById('root'));

@@ -1,18 +1,16 @@
-const express = require('express')
-const app = express()
-
-var express = requie('express');
+var express = require('express')
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 var passport = require('passport');
+var path = require('path');
 var LocalStrategy = require('passport-local').Strategy;
 
-
-var routes = require('./routes/index');
-var auth = require('./routes/auth');
-
-var models = require('./models/models');
+var models = require('../reactApp/models/models');
 var User = models.User;
+
+var routes = require('../reactApp/routes/index');
+var auth = require('../reactApp/routes/auth');
+
 
 // var findOrCreate = require('mongoose-find-or-create');
 // var routes = require('./routes/index');
@@ -28,14 +26,6 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(express.static(path.join(__dirname, 'public')));
 
-//uncomment routes
-app.use('/', auth(passport));
-app.use('/', routes);
-
-// Example route
-app.get('/', function (req, res) {
-  res.send('Hello World!')
-})
 
 // Tell Passport how to set req.user
 passport.serializeUser(function(user, done) {
@@ -71,6 +61,16 @@ passport.use(new LocalStrategy(function(username, password, done) {
   });
 }));
 
+//uncomment routes
+// app.use('/', auth(passport));
+app.use('/', auth(passport));
+
+// Example route
+// app.get('/', function (req, res) {
+//   res.send('Hello World!')
+// })
+
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
@@ -93,7 +93,6 @@ app.use(function(err, req, res, next) {
 // app.listen(app.get('port'), function() {
 //   console.log('Node app is running on port:', app.get('port'));
 // });
-
 
 
 app.listen(3000, function () {

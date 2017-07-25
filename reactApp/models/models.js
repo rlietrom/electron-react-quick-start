@@ -1,6 +1,7 @@
 var express = require('express');
 var mongoose = require('mongoose');
-var passport
+// var passport
+// var findOrCreate = require('mongoose-find-or-create');
 var connect = process.env.MONGODB_URI;
 // var findOrCreate = require('mongoose-find-or-create');
 
@@ -25,12 +26,12 @@ var documentSchema = new Schema({
   password: String,
   title: String,
   collaborators: Array, //array of user ID's
-  content: ????
+  content: String //TODO what is this format for the document state??
 });
 
 
-userSchema.plugin(findOrCreate);
-documentSchema.plugin(findOrCreate);
+// userSchema.plugin(findOrCreate);
+// documentSchema.plugin(findOrCreate);
 
 var User = mongoose.model('User', userSchema);
 var Document = mongoose.model('Document', documentSchema);

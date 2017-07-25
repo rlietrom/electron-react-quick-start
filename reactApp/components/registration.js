@@ -1,5 +1,6 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
+import {Link} from 'react-router-dom';
 
 class Registration extends React.Component {
   constructor(props) {
@@ -10,11 +11,6 @@ class Registration extends React.Component {
     }
   }
 
-  onSubmit(){
-    //submit this using an axios or fetch request to passport
-    // TODO: create new account on the server
-  }
-
   render() {
     return(
       <div onSubmit={() => this.onSubmit()}>
@@ -22,9 +18,7 @@ class Registration extends React.Component {
         <input type="text" name="username" placeholder="..."></input>
         <input type="password" name="password" placeholder="..."></input>
         <button>Register</button>
-        <button>Go back to login</button>
-        {/* TODO: route to register page */}
-        {/* TODO: make sure these two input boxes modify the state*/}
+        <Link to='/login'>Click here to return to Login</Link>
       </div>
     )
   }
