@@ -14,6 +14,10 @@ class Toolbox extends React.Component {
         <button onClick={() => this.props.clickHandler("CODE")}>code</button>
         <button onClick={() => this.props.clickHandler("STRIKETHROUGH")}>strike</button>
         <button onClick={() => this.props.clickHandler("PINK")}>pink</button>
+        <button onClick={() => this.props.clickHandler("LARGE")}>+</button>
+        <button onClick={() => this.props.clickHandler("right")}>right</button>
+        <button onClick={() => this.props.clickHandler("center")}>center</button>
+        <button onClick={() => this.props.clickHandler("bullets")}>bullets</button>
         <div>This is toolbox</div>
       </div>
     )

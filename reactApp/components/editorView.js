@@ -1,7 +1,8 @@
 var React = require('react');
 var Toolbox = require('./toolbox');
 var ReactDOM = require('react-dom');
-var {Editor, EditorState, RichUtils} = require('draft-js');
+var {DefaultDraftBlockRenderMap, Editor, EditorState, RichUtils} = require('draft-js');
+const { Map } = require('immutable');
 
 const styleMap = {
   'STRIKETHROUGH': {
@@ -9,8 +10,26 @@ const styleMap = {
   },
   'PINK': {
     color: '#F176A7'
+  },
+  'LARGE': {
+    fontSize: '24'
   }
 };
+
+const blockRenderMap = Map({
+  'rightDiv': {
+    element: 'div'
+  },
+  'centerDiv': {
+    element: 'center'
+  }
+});
+
+// Include 'paragraph' as a valid block and updated the unstyled element but
+// keep support for other draft default block types
+const extendedBlockRenderMap = DefaultDraftBlockRenderMap.merge(blockRenderMap);
+
+
 //import styles from '../styles.css';
 
 class EditorView extends React.Component {
@@ -41,9 +60,35 @@ class EditorView extends React.Component {
     if(btn === 'PINK'){
       this.onChange(RichUtils.toggleInlineStyle(this.state.editorState, 'PINK'));
     }
+    if(btn === 'LARGE'){
+      this.onChange(RichUtils.toggleInlineStyle(this.state.editorState, 'LARGE'));
+    }
+    if(btn === 'right'){
+      this.onChange(RichUtils.toggleBlockType(this.state.editorState, 'rightDiv'));
+    }
+    if(btn === 'center'){
+      this.onChange(RichUtils.toggleBlockType(this.state.editorState, 'centerDiv'));
+    }
+    if(btn === 'bullets'){
+      this.onChange(RichUtils.onTab(btn, this.state.editorState, 4));
+    }
   }
 
+  _onTab(e) {
+    const maxDepth = 4;
+    this.onChange(RichUtils.onTab(e, this.state.editorState, maxDepth));
+  }
 
+  myBlockStyleFn(contentBlock) {
+    const type = contentBlock.getType();
+    if (type === 'rightDiv') {
+      return 'align-right';
+    }
+    if(type === 'centerDiv') {
+      return 'center';
+    }
+    return null;
+  }
 
   render() {
     return (
@@ -54,6 +99,9 @@ class EditorView extends React.Component {
           editorState={this.state.editorState}
           onChange={this.onChange}
           customStyleMap={styleMap}
+          blockStyleFn={this.myBlockStyleFn}
+          blockRenderMap={extendedBlockRenderMap}
+          onTab={this.onTab}
         />
         </div>
         <Toolbox clickHandler={(btn) => this.clickHandler(btn)}/>
