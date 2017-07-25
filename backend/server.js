@@ -5,18 +5,22 @@ var passport = require('passport');
 var path = require('path');
 var LocalStrategy = require('passport-local').Strategy;
 
-var models = require('../reactApp/models/models');
+var models = require('./models/models');
 var User = models.User;
 
-var routes = require('../reactApp/routes/index');
-var auth = require('../reactApp/routes/auth');
+var routes = require('./routes/index');
+var auth = require('./routes/auth');
 
 
 // var findOrCreate = require('mongoose-find-or-create');
 // var routes = require('./routes/index');
 // var auth = require('./routes/auth');
 
+connect = mongoose.connect(process.env.MONGODB_URI);
+
 var app = express();
+app.use(bodyParser.json());
+// app.use(bodyParser.urlencoded({ extended: false }));
 var session = require('express-session');
 
 var session = require('express-session');
@@ -72,21 +76,21 @@ app.use('/', auth(passport));
 
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  var err = new Error('Not Found');
-  err.status = 404;
-  next(err);
-});
+// app.use(function(req, res, next) {
+//   var err = new Error('Not Found');
+//   err.status = 404;
+//   next(err);
+// });
 
 // production error handler
 // no stacktraces leaked to user
-app.use(function(err, req, res, next) {
-  res.status(err.status || 500);
-  res.render('error', {
-    message: err.message,
-    error: {}
-  });
-});
+// app.use(function(err, req, res, next) {
+//   res.status(err.status || 500);
+//   res.render('error', {
+//     message: err.message,
+//     error: {}
+//   });
+// });
 
 // app.set('port', 3000);
 //

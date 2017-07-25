@@ -1,8 +1,9 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
-import {Link, HashRouter} from 'react-router-dom';
+import {Redirect, Link, HashRouter} from 'react-router-dom';
 var Registration = require('./registration');
 var axios = require('axios');
+var Portal = require('./portal');
 
 
 class Login extends React.Component {
@@ -10,7 +11,8 @@ class Login extends React.Component {
     super(props)
     this.state = {
       username: "",
-      password: ""
+      password: "",
+      loggedIn: false
     }
   }
 
@@ -19,32 +21,38 @@ class Login extends React.Component {
     console.log("entering onSubmit");
     axios({
       method: 'POST',
-      url: 'http://localhost:3000/login', //need to define this route
+      url: 'http://localhost:3000/login',
       data: {
         username: this.state.username,
         password: this.state.password, //TODO: Hash this password?
       }
-    });
+    })
+    .then(response => {
+      if(response.data.success){
+        this.setState({loggedIn: true})
+      } else {
+        //log in failed
+      }
+    })
   }
 
   render() {
-    return(
-      <div>
-        <h1>Welcome to docs.curl.com! Please log in:</h1>
-        <input onChange={() => this.setState({username: this.state})} type="text" name="username" placeholder="Username..."></input>
-        <input onChange={() => this.setState({password: this.state})} type="password" name="password" placeholder="Password..."></input>
-        <button onClick={() => this.onSubmit()}>Login</button>
-        {/* <button>Register</button> */}
-        <Link to='/register'>Click here to Register</Link>
-        {/* <button>Register</button> */}
-        {/* <HashRouter>
-          <Registration/>
-        </HashRouter> */}
 
-        {/* TODO: route to register page */}
-        {/* TODO: make sure these two input boxes modify the state*/}
-      </div>
-    )
+    if(this.state.loggedIn) {
+      return(
+        <Redirect to={'/portal'}/>
+      )
+    } else {
+      return(
+        <div>
+          <h1>Welcome to docs.curl.com! Please log in:</h1>
+          <input onChange={(e) => this.setState({username: e.target.value})} type="text" name="username" placeholder="Username..."></input>
+          <input onChange={(e) => this.setState({password: e.target.value})} type="password" name="password" placeholder="Password..."></input>
+          <button onClick={() => this.onSubmit()}>Login</button>
+          <button><Link to='/register'>Click here to Register</Link></button>
+        </div>
+      )
+    }
   }
 }
 
