@@ -5,7 +5,26 @@ class Portal extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
+      title: ""
     }
+  }
+
+  createNewDocument() {
+    axios({
+      method: 'POST',
+      url: 'http://localhost:3000/createnewdocument',
+      data: {
+        title: this.state.title,
+        author: req.user.username, //TODO: Hash this password?
+      }
+    })
+    .then(response => {
+      if(response.data.success){
+        this.setState({loggedIn: true})
+      } else {
+        //log in failed
+      }
+    })
   }
 
   render() {
@@ -13,11 +32,11 @@ class Portal extends React.Component {
       <div>
         <h1>(Username's) Portal:</h1>
         <input type="text" name="newDoc" placeholder="Enter new document name..."></input>
-        <button>Create a new document (unimplemented)</button>
+        <button onClick={() => this.createNewDocument()}>Create a new document (unimplemented)</button>
         <div>
           <h3>Your documents: </h3>
           <ul>
-            <li>list1</li>
+            <li >list1</li>
             <li>list2</li>
             <li>list3</li>
           </ul>
