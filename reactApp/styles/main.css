@@ -1,0 +1,29 @@
+body {
+  background-color: 'lavender'
+}
+.toolbar {
+  background-color: white;
+  padding: 5px;
+}
+
+.right-align {
+  text-align: right
+}
+
+.center-align {
+  text-align: center
+}
+
+.editor {
+  border-style: double;
+  border-color: 'black';
+  min-height: 500px;
+  padding: 10px;
+  min-width: 300px;
+  border-width: 1px;
+}
+
+.toolbar > button{
+  width: 46px;
+  min-width: 0 !important;
+}
