@@ -33,10 +33,20 @@
     "eslint-plugin-react": "^5.2.2"
   },
   "dependencies": {
+    "axios": "^0.16.2",
     "babel-polyfill": "^6.23.0",
+    "body-parser": "^1.17.2",
     "draft-js": "^0.10.1",
     "express": "^4.15.3",
+    "express-session": "^1.15.4",
+    "find-or-create": "^1.1.0",
+    "moment": "^2.18.1",
+    "mongodb": "^2.2.30",
+    "mongoose": "^4.11.4",
+    "passport": "^0.3.2",
+    "passport-local": "^1.0.0",
     "react": "^15.6.1",
-    "react-dom": "^15.6.1"
+    "react-dom": "^15.6.1",
+    "react-router-dom": "^4.1.2"
   }
 }

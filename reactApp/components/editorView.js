@@ -1,7 +1,7 @@
 var React = require('react');
 var Toolbox = require('./toolbox');
 var ReactDOM = require('react-dom');
-var {Editor, EditorState, RichUtils} = require('draft-js');
+var {Editor, EditorState, AppBar, RichUtils} = require('draft-js');
 //import styles from '../styles.css';
 
 class EditorView extends React.Component {
@@ -37,6 +37,7 @@ class EditorView extends React.Component {
   render() {
     return (
       <div>
+        {/* <AppBar title={"Team Curl"}/> */}
         <h1>sampleDocumnent(unimplemented)</h1>
         <p>Shareable Document ID: 123456789(unimplemented)</p>
         <button>Save Changes (unimplemented)</button>
