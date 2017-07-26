@@ -45,7 +45,7 @@
     "react-color": "^2.13.4",
     "react-dom": "^15.6.1",
     "react-tap-event-plugin": "^2.0.1",
-    "style-loader": "^0.18.2"
+    "style-loader": "^0.18.2",
     "express-session": "^1.15.4",
     "find-or-create": "^1.1.0",
     "moment": "^2.18.1",
