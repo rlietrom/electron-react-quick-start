@@ -2,6 +2,8 @@ var React = require('react');
 var ReactDOM = require('react-dom');
 import {Redirect, Link} from 'react-router-dom';
 var axios = require('axios');
+import TextField from 'material-ui/TextField';
+import FlatButton from 'material-ui/FlatButton';
 
 class Registration extends React.Component {
   constructor(props) {
@@ -40,11 +42,34 @@ class Registration extends React.Component {
     } else {
       return(
         <div>
-          <h1>Register here for docs.curl.com:</h1>
-          <input onChange={(event) => this.setState({username: event.target.value })} type="text" name="username" placeholder="Username..."></input>
-          <input onChange={(event) => this.setState({password: event.target.value})} type="password" name="password" placeholder="Password..."></input>
-          <button onClick={() => this.onSubmit()}>Register!</button>
-          <button><Link to='/login'>Click here to return to Login</Link></button>
+          <h1>C U R L D O C S</h1>
+          <h3>register</h3>
+          <TextField
+            id="text-field-default"
+            floatingLabelText="username"
+            onChange={(event) => this.setState({username: event.target.value })}
+            type="text"
+            name="username">
+            </TextField>
+
+          <TextField
+            id="text-field-default"
+            floatingLabelText="password"
+            onChange={(event) => this.setState({password: event.target.value})}
+            type="password"
+            name="password">
+            </TextField>
+              <br/>
+          <FlatButton
+            label="register"
+            onClick={() => this.onSubmit()}></FlatButton>
+          <FlatButton
+            fullWidth={false}
+            label="back to login"
+             href='/login'
+            >
+
+          </FlatButton>
         </div>
       )
     }
