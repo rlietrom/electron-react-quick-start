@@ -18,7 +18,7 @@ var userSchema = new Schema({
   password: String,
   documentsOwned: Array,  //array of document ID's
   //TODO: use ref {{}}
-  documentsCollaborated: Array  //array of document ID's
+  documentsSharedWithMe: Array  //array of document ID's
 });
 
 var documentSchema = new Schema({

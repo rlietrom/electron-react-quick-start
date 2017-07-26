@@ -59,7 +59,7 @@ router.post('/newcollaborator', function(req, res){
     //double check response.document._id
     User.findById(req.user._id)
      .then((user) => {
-       user.documentsCollaborated.push(response.document._id)
+       user.documentsSharedWithMe.push(response.document._id)
      })
      user.save(function(err, user){
        if(err){

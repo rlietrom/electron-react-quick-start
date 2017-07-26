@@ -28,7 +28,7 @@ module.exports = function(passport) {
       username: req.body.username,
       password: req.body.password,
       documentsOwned: [],
-      documentsCollaborated: []
+      documentsSharedWithMe: []
     })
     console.log("this is newUser: ", newUser);
     newUser.save(function(err, user){
