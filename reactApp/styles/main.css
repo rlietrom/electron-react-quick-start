@@ -1,6 +1,8 @@
 body {
-  background-color: 'lavender'
+  background-color: 'lavender';
+  font-family: 'Roboto', sans-serif;
 }
+
 .toolbar {
   background-color: white;
   padding: 5px;
