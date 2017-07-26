@@ -16,7 +16,7 @@ var Schema = mongoose.Schema;
 var userSchema = new Schema({
   username: String,
   password: String,
-  documentsOwned: [],  //array of document ID's
+  documentsOwned: Array,  //array of document ID's
   //TODO: use ref {{}}
   documentsCollaborated: Array  //array of document ID's
 });

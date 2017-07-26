@@ -40,4 +40,44 @@ router.post('/createnewdocument', function(req, res){
   })
 });
 
+
+router.post('/newcollaborator', function(req, res){
+
+  Document.findById(req.body._id)
+  .then((doc) => {
+    doc.collaborators.push(req.user._id)
+    doc.save(function(err, doc){
+      if(err){
+        console.log(err)
+      } else {
+        res.json({success: true, document: doc})
+      }
+    })
+  })
+  .then((response) => {
+    console.log("this is response", response);
+    //double check response.document._id
+    User.findById(req.user._id)
+     .then((user) => {
+       user.documentsCollaborated.push(response.document._id)
+     })
+     user.save(function(err, user){
+       if(err){
+         console.log(err)
+       } else {
+         res.json({success: true, user: user})
+       }
+     })
+  })
+
+
+});
+
+router.get('/usershareddocuments', function(req, res){
+  Document.find({
+
+  })
+})
+
+
 module.exports = router;
