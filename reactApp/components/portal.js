@@ -12,7 +12,8 @@ class Portal extends React.Component {
     this.state = {
       title: "",
       sharedId: "",
-      docs: []
+      docs: [],
+      sharedDocs: []
     }
   }
 
@@ -25,6 +26,17 @@ class Portal extends React.Component {
     .then(response => {
       if(response.data.success){
         this.setState({docs: response.data.docs});
+      } else {
+        console.log("failed to create new doc");
+      }
+    })
+    axios({
+      method: 'GET',
+      url: 'http://localhost:3000/usershareddocuments'
+    })
+    .then(response => {
+      if(response.data.success){
+        this.setState({sharedDocs: response.data.docs});
       } else {
         console.log("failed to create new doc");
       }
@@ -47,6 +59,23 @@ class Portal extends React.Component {
       } else {
         console.log("failed to create new doc");
       }
+    })
+  }
+
+  addSharedDoc() {
+    axios({
+      method: 'POST',
+      url: 'http://localhost:3000/newcollaborator',
+      data: {
+        _id: this.state.sharedId,
+      }
+    })
+    .then(response => {
+      console.log("adding shared doc", response);
+      if(response.data.success) {
+        this.componentDidMount()
+      }
+      else {}
     })
   }
 
@@ -81,16 +110,21 @@ class Portal extends React.Component {
           </div>
           <div>
             <br/>
-            <h3>FIND A DOC</h3>
+            <h3>SHARED DOCS</h3>
+            <ul>
+              {this.state.sharedDocs.map((document) => <li><Link to="/editorview">{document.title}</Link></li>)}
+            </ul>
             <TextField
               type="text"
               name="newDoc"
               placeholder="Document ID"
+              onChange={(e) => this.setState({sharedId: e.target.value})}
               >
               </TextField>
             <FlatButton
               fullWidth={false}
-              label="find"
+              label="ADD"
+              onClick={() => this.addSharedDoc()}
               >
             </FlatButton>
           </div>
