@@ -51,10 +51,21 @@ class Portal extends React.Component {
     return (
       <HashRouter>
         <div>
-          <h1>(Username's) Portal:</h1>
-          <input type="text" onChange={(e) => this.setState({title: e.target.value})}
-            name="newDoc" placeholder="Enter new document name..."></input>
-          <button onClick={() => this.createNewDocument()}>Create a new document (unimplemented)</button>
+          <h1>C U R L D O C S</h1>
+          <h3>Your Documents</h3>
+          <br/><br/>
+          <TextField
+            type="text"
+            onChange={(e) => this.setState({title: e.target.value})}
+            name="newDoc"
+            hintText="Enter new document name..."
+            >
+          </TextField>
+          <FlatButton
+            fullWidth={false}
+            label="New Doc"
+            onClick={() => this.createNewDocument()}
+          />
           <div>
             <h3>Your documents: </h3>
             <ul>

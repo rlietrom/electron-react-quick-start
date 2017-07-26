@@ -49,8 +49,11 @@ class Login extends React.Component {
     } else {
       return(
         <div>
+          <center>
+            <br/><br/>
           <h1>C U R L D O C S</h1>
-          <h3>login</h3>
+          <h3>LOGIN</h3>
+
           <TextField
             hintText="username"
             floatingLabelText="username"
@@ -64,8 +67,9 @@ class Login extends React.Component {
             onChange={(e) => this.setState({password: e.target.value})}
             type="password"
             name="password"
-          /><br />
+          /><br /><br/>
           <FlatButton
+            style={{'display': 'flex'}}
             fullWidth={false}
             label="Login"
             onClick={() => this.onSubmit()}
@@ -73,8 +77,9 @@ class Login extends React.Component {
           <FlatButton
             fullWidth={false}
             label="Register"
-            href='/register'
-          />
+            containerElement={<Link to="/register" />}
+          ></FlatButton>
+          </center>
         </div>
       )
     }
