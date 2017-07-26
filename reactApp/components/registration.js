@@ -42,8 +42,10 @@ class Registration extends React.Component {
     } else {
       return(
         <div>
-          <h1>C U R L D O C S</h1>
-          <h3>register</h3>
+          <center>
+            <br/><br/>
+          <h1 style={{'font-family': 'verdana'}}>C U R L D O C S</h1>
+          <h3 style={{'font-family': 'verdana'}}>REGISTER</h3>
           <TextField
             id="text-field-default"
             floatingLabelText="username"
@@ -51,7 +53,7 @@ class Registration extends React.Component {
             type="text"
             name="username">
             </TextField>
-
+              <br/>
           <TextField
             id="text-field-default"
             floatingLabelText="password"
@@ -59,17 +61,18 @@ class Registration extends React.Component {
             type="password"
             name="password">
             </TextField>
-              <br/>
+              <br/> <br/> <br/>
           <FlatButton
+            style={{'display': 'flex'}}
             label="register"
             onClick={() => this.onSubmit()}></FlatButton>
           <FlatButton
             fullWidth={false}
             label="back to login"
-             href='/login'
+            containerElement={<Link to="/login" />}
             >
-
           </FlatButton>
+          </center>
         </div>
       )
     }
