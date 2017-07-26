@@ -1,6 +1,6 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
-import {Link} from 'react-router-dom';
+import {Redirect, Link} from 'react-router-dom';
 var axios = require('axios');
 
 class Registration extends React.Component {
@@ -8,7 +8,8 @@ class Registration extends React.Component {
     super(props)
     this.state = {
       username: "",
-      password: ""
+      password: "",
+      isRegistered: false
     }
   }
 
@@ -22,21 +23,31 @@ class Registration extends React.Component {
         password: this.state.password, //TODO: Hash this password?
       }
     })
-    .then(function(response){
-      console.log(response)
+    .then(response => {
+      if (response.data.success){
+        this.setState({isRegistered: true});
+      } else {
+        console.log('server error with registration, try back later please!')
+      };
     });
   }
 
   render() {
-    return(
-      <div>
-        <h1>Register here for docs.curl.com:</h1>
-        <input onChange={(event) => this.setState({username: event.target.value })} type="text" name="username" placeholder="Username..."></input>
-        <input onChange={(event) => this.setState({password: event.target.value})} type="password" name="password" placeholder="Password..."></input>
-        <button onClick={() => this.onSubmit()}>Register!</button>
-        <button><Link to='/login'>Click here to return to Login</Link></button>
-      </div>
-    )
+    if(this.state.isRegistered){
+      return(
+        <Redirect to='/login'/>
+      )
+    } else {
+      return(
+        <div>
+          <h1>Register here for docs.curl.com:</h1>
+          <input onChange={(event) => this.setState({username: event.target.value })} type="text" name="username" placeholder="Username..."></input>
+          <input onChange={(event) => this.setState({password: event.target.value})} type="password" name="password" placeholder="Password..."></input>
+          <button onClick={() => this.onSubmit()}>Register!</button>
+          <button><Link to='/login'>Click here to return to Login</Link></button>
+        </div>
+      )
+    }
   }
 }
 

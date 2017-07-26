@@ -1,5 +1,6 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
+var {HashRouter, Link} = require('react-router-dom');
 var axios = require('axios');
 
 class Portal extends React.Component {
@@ -27,7 +28,6 @@ class Portal extends React.Component {
     })
   }
 
-
   createNewDocument() {
     axios({
       method: 'POST',
@@ -49,20 +49,22 @@ class Portal extends React.Component {
 
   render() {
     return (
-      <div>
-        <h1>(Username's) Portal:</h1>
-        <input type="text" onChange={(e) => this.setState({title: e.target.value})}
-          name="newDoc" placeholder="Enter new document name..."></input>
-        <button onClick={() => this.createNewDocument()}>Create a new document (unimplemented)</button>
+      <HashRouter>
         <div>
-          <h3>Your documents: </h3>
-          <ul>
-            {this.state.docs.map((document) => <li>{document.title}</li>)}
-          </ul>
+          <h1>(Username's) Portal:</h1>
+          <input type="text" onChange={(e) => this.setState({title: e.target.value})}
+            name="newDoc" placeholder="Enter new document name..."></input>
+          <button onClick={() => this.createNewDocument()}>Create a new document (unimplemented)</button>
+          <div>
+            <h3>Your documents: </h3>
+            <ul>
+              {this.state.docs.map((document) => <li><Link to="/editorview">{document.title}</Link></li>)}
+            </ul>
+          </div>
+          <input type="text" name="newDoc" placeholder="Enter document ID to get access to shared file"></input>
+          <button>Create a new document (unimplemented)</button>
         </div>
-        <input type="text" name="newDoc" placeholder="Enter document ID to get access to shared file"></input>
-        <button>Create a new document (unimplemented)</button>
-      </div>
+      </HashRouter>
     )
   }
 }

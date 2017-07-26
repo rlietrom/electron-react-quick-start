@@ -35,7 +35,7 @@ module.exports = function(passport) {
       if(err){
         console.log(err)
       } else {
-        res.send("user has been registered")
+        res.json({success: true})
       }
     })
   });
