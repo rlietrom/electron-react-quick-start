@@ -22,11 +22,14 @@ var userSchema = new Schema({
 });
 
 var documentSchema = new Schema({
-  author: String, //user ID or user Object
+  author: {
+    ref: User,
+    type: Schema.Types.ObjectId,
+  }, //user ID or user Object
   password: String,
   title: String,
   collaborators: Array, //array of user ID's
-  content: String //TODO what is this format for the document state??
+  content: Object
 });
 
 

@@ -32,6 +32,7 @@ class Login extends React.Component {
         this.setState({loggedIn: true})
       } else {
         //log in failed
+        console.log("log in failed");
       }
     })
   }

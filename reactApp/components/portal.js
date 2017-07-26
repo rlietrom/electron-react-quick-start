@@ -6,9 +6,27 @@ class Portal extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      title: ""
+      title: "",
+      sharedId: "",
+      docs: []
     }
   }
+
+  componentDidMount() {
+    //axios get request
+    axios({
+      method: 'GET',
+      url: 'http://localhost:3000/userdocuments',
+    })
+    .then(response => {
+      if(response.data.success){
+        this.setState({docs: response.data.docs});
+      } else {
+        console.log("failed to create new doc");
+      }
+    })
+  }
+
 
   createNewDocument() {
     axios({
@@ -20,11 +38,12 @@ class Portal extends React.Component {
     })
     .then(response => {
       console.log(response);
-      // if(response.){
-      //   console.log("created new document")
-      // } else {
-      //   console.log("failed to create new doc");
-      // }
+      if(response.data.success){
+        console.log("created new document");
+        this.componentDidMount();
+      } else {
+        console.log("failed to create new doc");
+      }
     })
   }
 
@@ -38,9 +57,7 @@ class Portal extends React.Component {
         <div>
           <h3>Your documents: </h3>
           <ul>
-            <li >list1</li>
-            <li>list2</li>
-            <li>list3</li>
+            {this.state.docs.map((document) => <li>{document.title}</li>)}
           </ul>
         </div>
         <input type="text" name="newDoc" placeholder="Enter document ID to get access to shared file"></input>

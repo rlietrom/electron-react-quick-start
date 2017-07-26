@@ -13,21 +13,29 @@ router.use(function(req, res, next){
   }
 });
 
+router.get('/userdocuments', function(req, res){
+  Document.find({author: req.user._id})
+  .then((docsArray) => {
+    res.json({success: true, docs: docsArray});
+  })
+})
+
 router.post('/createnewdocument', function(req, res){
-  console.log(req.user);
+  console.log("this is req.user",req.user);
+
   var newDocument = new Document({
-    author: req.user.username,
+    author: req.user._id,
     password: "12345",
     title: req.body.title,
     collaborators: [],
-    content: ""
+    content: {}
   })
   console.log("this is Document: ", newDocument);
   newDocument.save(function(err, doc){
     if(err){
       console.log(err)
     } else {
-      res.send("document has been created");
+      res.json({success: true, document: newDocument})
     }
   })
 });
