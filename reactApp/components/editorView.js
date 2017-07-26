@@ -2,7 +2,7 @@ var React = require('react');
 var Toolbox = require('./toolbox');
 var ReactDOM = require('react-dom');
 var {DefaultDraftBlockRenderMap, Editor, EditorState, RichUtils} = require('draft-js');
-var {Editor, EditorState, AppBar, RichUtils} = require('draft-js');
+var {Editor, ContentState, EditorState, AppBar, RichUtils} = require('draft-js');
 const { Map } = require('immutable');
 import { ChromePicker } from 'react-color'
 import { Toolbar }from 'material-ui/Toolbar';
@@ -143,6 +143,10 @@ class EditorView extends React.Component {
           )
         }
 
+        onSave() {
+          console.log("this is currentContent", this.state.editorState.getCurrentContent());
+        }
+
         render() {
           return (
             <div>
@@ -170,6 +174,7 @@ class EditorView extends React.Component {
                   blockRenderMap={myBlockTypes}
                 />
               </div>
+              <FlatButton onClick={() => this.onSave()}>Save Document</FlatButton>
             </div>
           )
         }
