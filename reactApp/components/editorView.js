@@ -2,6 +2,7 @@ var React = require('react');
 var Toolbox = require('./toolbox');
 var ReactDOM = require('react-dom');
 var {DefaultDraftBlockRenderMap, Editor, EditorState, RichUtils} = require('draft-js');
+var {Editor, EditorState, AppBar, RichUtils} = require('draft-js');
 const { Map } = require('immutable');
 import { ChromePicker } from 'react-color'
 import { Toolbar }from 'material-ui/Toolbar';
@@ -9,6 +10,8 @@ import FlatButton from 'material-ui/FlatButton';
 import FontIcon from 'material-ui/FontIcon';
 import { Popover }  from 'material-ui/Popover';
 import styles from '../styles/main.css';
+//import styles from '../styles.css';
+
 
 const myBlockTypes = DefaultDraftBlockRenderMap.merge(new Map({
   right: {
@@ -19,6 +22,7 @@ const myBlockTypes = DefaultDraftBlockRenderMap.merge(new Map({
   }
 })
 );
+
 
 
 class EditorView extends React.Component {
@@ -163,6 +167,35 @@ class EditorView extends React.Component {
           {this.increaseFontSize(true)}
         </div>
 
+//   clickHandler(btn) {
+//     if(btn === 'BOLD'){
+//       this.onChange(RichUtils.toggleInlineStyle(this.state.editorState, 'BOLD'));
+//     }
+//     if(btn === 'ITALIC'){
+//       this.onChange(RichUtils.toggleInlineStyle(this.state.editorState, 'ITALIC'));
+//     }
+//     if(btn === 'UNDERLINE'){
+//       this.onChange(RichUtils.toggleInlineStyle(this.state.editorState, 'UNDERLINE'));
+//     }
+//     if(btn === 'CODE'){
+//       this.onChange(RichUtils.toggleInlineStyle(this.state.editorState, 'CODE'));
+//     }
+//     if(btn === 'STRIKETHROUGH'){
+//       this.onChange(RichUtils.toggleInlineStyle(this.state.editorState, 'STRIKETHROUGH'));
+//     }
+//     if(btn === 'PINK'){
+//       this.onChange(RichUtils.toggleInlineStyle(this.state.editorState, 'PINK'));
+//     }
+//   }
+
+//   render() {
+//     return (
+//       <div>
+//         {/* <AppBar title={"Team Curl"}/> */}
+//         <h1>sampleDocumnent(unimplemented)</h1>
+//         <p>Shareable Document ID: 123456789(unimplemented)</p>
+//         <button>Save Changes (unimplemented)</button>
+//         {/* <button onClick={this._onBoldClick.bind(this)}>Bold</button> */}
         <div className='editor'>
         <Editor
 
@@ -170,9 +203,7 @@ class EditorView extends React.Component {
           customStyleMap={this.state.inlineStyles}
           editorState={this.state.editorState}
           onChange={this.onChange}
-          // blockStyleFn={this.myBlockStyleFn}
           blockRenderMap={myBlockTypes}
-          // onTab={this.onTab}
         />
         </div>
       </div>
@@ -181,7 +212,7 @@ class EditorView extends React.Component {
   }
 }
 
-export default EditorView;
+// export default EditorView;
 
 // const styleMap = {
 //   'STRIKETHROUGH': {
@@ -346,3 +377,12 @@ export default EditorView;
 //   //       )
 //   //   })
 //   // }
+// const styleMap = {
+//   'STRIKETHROUGH': {
+//     textDecoration: 'line-through',
+//   },
+//   'PINK': {
+//     color: '#F176A7'
+//   }
+// }
+module.exports = EditorView;
