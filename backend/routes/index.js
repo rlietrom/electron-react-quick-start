@@ -1,52 +1,34 @@
-//TODO: Not sure if this is correct
-
-
+// var Login = require('../../reactApp/components/login')
 var express = require('express');
 var router = express.Router();
-var moment = require('moment');
-var models = require('../models/models');
+var models = require('../models/models.js');
 var User = models.User;
 var Document = models.Document;
 
-//middleware that means someone not logged in cannot get below this route
 router.use(function(req, res, next){
   if (!req.user) {
-    res.redirect('/login');
+    res.json({success: false})
   } else {
     return next();
   }
 });
 
-router.get('/', function(req, res, next) {
-  res.redirect('/portal');
-});
-
-router.get('/contacts', function(req, res, next) {
-  // Load all contacts (that this user has permission to view).
-  User.findById(req.user, function(err, user) {
-    Contact.find({owner: req.user.id}, function(err, contacts) {
-      if (err) return next(err);
-      res.render('contacts', {
-        contacts: contacts,
-        user: user
-      });
-    });
+router.post('/createnewdocument', function(req, res){
+  console.log(req.user);
+  var newDocument = new Document({
+    author: req.user.username,
+    password: "12345",
+    title: req.body.title,
+    collaborators: [],
+    content: ""
   })
-});
-
-router.get('/contacts/new', function(req, res, next) {
-  res.render('editContact');
-});
-
-router.post('/contacts/new', function(req, res, next) {
-  var contact = new Contact({
-    name: req.body.name,
-    phone: req.body.phone,
-    owner: req.user.id
-  });
-  contact.save(function(err) {
-    if (err) return next(err);
-    res.redirect('/contacts');
+  console.log("this is Document: ", newDocument);
+  newDocument.save(function(err, doc){
+    if(err){
+      console.log(err)
+    } else {
+      res.send("document has been created");
+    }
   })
 });
 

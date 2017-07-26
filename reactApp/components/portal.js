@@ -1,5 +1,6 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
+var axios = require('axios');
 
 class Portal extends React.Component {
   constructor(props) {
@@ -15,15 +16,15 @@ class Portal extends React.Component {
       url: 'http://localhost:3000/createnewdocument',
       data: {
         title: this.state.title,
-        author: req.user.username, //TODO: Hash this password?
       }
     })
     .then(response => {
-      if(response.data.success){
-        this.setState({loggedIn: true})
-      } else {
-        //log in failed
-      }
+      console.log(response);
+      // if(response.){
+      //   console.log("created new document")
+      // } else {
+      //   console.log("failed to create new doc");
+      // }
     })
   }
 
@@ -31,7 +32,8 @@ class Portal extends React.Component {
     return (
       <div>
         <h1>(Username's) Portal:</h1>
-        <input type="text" name="newDoc" placeholder="Enter new document name..."></input>
+        <input type="text" onChange={(e) => this.setState({title: e.target.value})}
+          name="newDoc" placeholder="Enter new document name..."></input>
         <button onClick={() => this.createNewDocument()}>Create a new document (unimplemented)</button>
         <div>
           <h3>Your documents: </h3>

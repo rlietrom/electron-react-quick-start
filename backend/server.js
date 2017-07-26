@@ -68,6 +68,8 @@ passport.use(new LocalStrategy(function(username, password, done) {
 //uncomment routes
 // app.use('/', auth(passport));
 app.use('/', auth(passport));
+app.use('/', routes);
+
 
 // Example route
 // app.get('/', function (req, res) {

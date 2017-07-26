@@ -21,7 +21,7 @@ ReactDOM.render(
       <Route strict path='/login' component={Login}/>
       <Route path='/register' component={Registration}/>
       <Route path='/portal' component={Portal}/>
-      <Route path='/editorview' component={editorView}/>
+      <Route path='/editorview' component={EditorView}/>
     </div>
   </HashRouter>,
    document.getElementById('root'));

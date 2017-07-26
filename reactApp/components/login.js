@@ -1,6 +1,6 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
-import {Redirect, Link, HashRouter} from 'react-router-dom';
+var {Redirect, Link, HashRouter} = require('react-router-dom')
 var Registration = require('./registration');
 var axios = require('axios');
 var Portal = require('./portal');
@@ -37,10 +37,11 @@ class Login extends React.Component {
   }
 
   render() {
-
     if(this.state.loggedIn) {
       return(
-        <Redirect to={'/portal'}/>
+        <div>
+          <Redirect to={'/portal'}/>
+        </div>
       )
     } else {
       return(
