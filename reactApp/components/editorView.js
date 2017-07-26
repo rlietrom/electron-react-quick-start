@@ -143,6 +143,11 @@ class EditorView extends React.Component {
           )
         }
 
+        onSave() {
+          console.log("this is editorState:");
+          console.log(EditorState.getCurrentContent());
+        }
+
         render() {
           return (
             <div>
