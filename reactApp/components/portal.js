@@ -2,6 +2,9 @@ var React = require('react');
 var ReactDOM = require('react-dom');
 var {HashRouter, Link} = require('react-router-dom');
 var axios = require('axios');
+import TextField from 'material-ui/TextField';
+import FlatButton from 'material-ui/FlatButton';
+import styles from '../styles/main.css';
 
 class Portal extends React.Component {
   constructor(props) {
@@ -51,29 +54,46 @@ class Portal extends React.Component {
     return (
       <HashRouter>
         <div>
+          <center>
           <h1>C U R L D O C S</h1>
-          <h3>Your Documents</h3>
-          <br/><br/>
+          </center>
+          <br/>
+          <h3>MAKE A DOC</h3>
           <TextField
             type="text"
             onChange={(e) => this.setState({title: e.target.value})}
             name="newDoc"
-            hintText="Enter new document name..."
+            hintText="New Document Name"
             >
           </TextField>
           <FlatButton
             fullWidth={false}
             label="New Doc"
             onClick={() => this.createNewDocument()}
-          />
+          >
+          </FlatButton>
+          <br/>
           <div>
-            <h3>Your documents: </h3>
+            <h3>YOUR DOCS</h3>
             <ul>
               {this.state.docs.map((document) => <li><Link to="/editorview">{document.title}</Link></li>)}
             </ul>
           </div>
-          <input type="text" name="newDoc" placeholder="Enter document ID to get access to shared file"></input>
-          <button>Create a new document (unimplemented)</button>
+          <div>
+            <br/>
+            <h3>FIND A DOC</h3>
+            <TextField
+              type="text"
+              name="newDoc"
+              placeholder="Document ID"
+              >
+              </TextField>
+            <FlatButton
+              fullWidth={false}
+              label="find"
+              >
+            </FlatButton>
+          </div>
         </div>
       </HashRouter>
     )
