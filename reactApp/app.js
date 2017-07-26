@@ -1,6 +1,6 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
-var MuiThemeProvider = require( 'material-ui/styles/MuiThemeProvider' );
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 var injectTapEventPlugin = require('react-tap-event-plugin')
 // var EditorView = require('./components/editorView');
 /* This can check if your electron app can communicate with your backend */
@@ -10,7 +10,7 @@ var injectTapEventPlugin = require('react-tap-event-plugin')
 // .catch(err => {throw err})
 injectTapEventPlugin();
 
-require('./main.css')
+require('./styles/main.css')
 import EditorView from './components/editorView'
 ReactDOM.render(
   <MuiThemeProvider>
