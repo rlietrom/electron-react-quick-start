@@ -120,7 +120,7 @@ class Portal extends React.Component {
             <br/>
             <h3>SHARED DOCS</h3>
             <ul>
-              {this.state.sharedDocs.map((document) => <li key={document._id}><Link to="/editorview">{document.title}</Link></li>)}
+              {this.state.sharedDocs.map((document) => <li key={document._id}><Link to={"/editorview/" + document._id}>{document.title}</Link></li>)}
             </ul>
             <TextField
               type="text"
