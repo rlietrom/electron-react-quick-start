@@ -57,6 +57,8 @@ class Login extends React.Component {
           <TextField
             hintText="username"
             floatingLabelText="username"
+            floatingLabelStyle={{'color': '#B39DDB'}}
+            underlineFocusStyle={{'borderBottom': 'solid #000000'}}
             onChange={(e) => this.setState({username: e.target.value})}
             type="text"
             name="username"
@@ -64,6 +66,8 @@ class Login extends React.Component {
           <TextField
             hintText="password"
             floatingLabelText="password"
+            floatingLabelStyle={{'color': '#B39DDB'}}
+            underlineFocusStyle={{'borderBottom': 'solid #000000'}}
             onChange={(e) => this.setState({password: e.target.value})}
             type="password"
             name="password"
@@ -71,11 +75,13 @@ class Login extends React.Component {
           <FlatButton
             style={{'display': 'flex'}}
             fullWidth={false}
+            hoverColor='#B39DDB'
             label="Login"
             onClick={() => this.onSubmit()}
           />
           <FlatButton
             fullWidth={false}
+            hoverColor='#B39DDB'
             label="Register"
             containerElement={<Link to="/register" />}
           ></FlatButton>

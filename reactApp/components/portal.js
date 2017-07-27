@@ -5,6 +5,7 @@ var axios = require('axios');
 import TextField from 'material-ui/TextField';
 import FlatButton from 'material-ui/FlatButton';
 import styles from '../styles/main.css';
+import FontIcon from 'material-ui/FontIcon';
 
 class Portal extends React.Component {
   constructor(props) {
@@ -94,48 +95,87 @@ class Portal extends React.Component {
           <center>
           <h1>C U R L D O C S</h1>
           </center>
-          <br/>
+          <br/> <br/> <br/> <br/>
+          <span>
           <h3>MAKE A DOC</h3>
           <TextField
             type="text"
+            floatingLabelStyle={{'color': '#B39DDB'}}
+            underlineFocusStyle={{'borderBottom': 'solid #000000'}}
             onChange={(e) => this.setState({title: e.target.value})}
             name="newDoc"
             hintText="New Document Name"
+            floatingLabelText="New Document Name"
             >
           </TextField>
           <FlatButton
             fullWidth={false}
-            label="New Doc"
+            hoverColor='#B39DDB'
+            icon={<FontIcon className="material-icons">note_add</FontIcon>}
             onClick={() => this.createNewDocument()}
           >
           </FlatButton>
-          <br/>
-          <div>
-            <h3>YOUR DOCS</h3>
-            <ul>
-              {this.state.docs.map((document) => <li key={document._id}><Link to={"/editorview/" + document._id}>{document.title}</Link></li>)}
-            </ul>
-          </div>
-          <div>
+          </span>
+
+          <div id="shared" style={{
+            'float':'right',
+            'position': 'absolute',
+            'left': '60%',
+            'top': '14%'
+                }}>
             <br/>
             <h3>SHARED DOCS</h3>
-            <ul>
-              {this.state.sharedDocs.map((document) => <li key={document._id}><Link to="/editorview">{document.title}</Link></li>)}
+            <ul style={{'listStyleType': 'none'}}>
+              {
+                this.state.sharedDocs.map((document) =>
+                <li key={document._id}>
+                  <FlatButton
+                    fullWidth={false}
+                    hoverColor='#B39DDB'
+                    label={document.title}
+                    containerElement={<Link to="/editorview">{document.title}</Link>}
+                    >
+                  </FlatButton>
+
+                </li>)
+              }
             </ul>
             <TextField
               type="text"
               name="newDoc"
-              placeholder="Document ID"
+              floatingLabelText="Document ID"
+              hintText="Document ID"
+              floatingLabelStyle={{'color': '#B39DDB'}}
+              underlineFocusStyle={{'borderBottom': 'solid #000000'}}
               onChange={(e) => this.setState({sharedId: e.target.value})}
               >
               </TextField>
             <FlatButton
               fullWidth={false}
-              label="ADD"
+              hoverColor='#B39DDB'
+              icon={<FontIcon className="material-icons">fingerprint</FontIcon>}
               onClick={() => this.addSharedDoc()}
               >
             </FlatButton>
           </div>
+
+          <div>
+            <br/> <br/>
+            <h3>YOUR DOCS</h3>
+            <ul style={{'listStyleType': 'none', 'margin': '0', 'padding': '0'}}>
+              {this.state.docs.map((document) =>
+                <li key={document._id}>
+                  <FlatButton
+                    fullWidth={false}
+                    hoverColor='#B39DDB'
+                    label={document.title}
+                    containerElement={<Link to={"/editorview/" + document._id}>{document.title}</Link>}
+                    >
+                  </FlatButton>
+              </li>)}
+            </ul>
+          </div>
+
         </div>
       </HashRouter>
     )
