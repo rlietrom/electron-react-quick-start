@@ -28,7 +28,7 @@ ReactDOM.render(
         <Route strict path='/login' component={Login}/>
         <Route path='/register' component={Registration}/>
         <Route path='/portal' component={Portal}/>
-        <Route path='/editorview' component={EditorView}/>
+        <Route path='/editorview/:id' component={EditorView}/>
      </div>
     </MuiThemeProvider>
   </HashRouter>,

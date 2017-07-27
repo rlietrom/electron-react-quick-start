@@ -20,7 +20,7 @@ class Login extends React.Component {
 
   onSubmit() {
     // Send a POST request
-    console.log("entering onSubmit");
+    // console.log("entering onSubmit");
     axios({
       method: 'POST',
       url: 'http://localhost:3000/login',

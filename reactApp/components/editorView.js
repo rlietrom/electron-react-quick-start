@@ -2,7 +2,7 @@ var React = require('react');
 var Toolbox = require('./toolbox');
 var ReactDOM = require('react-dom');
 var {DefaultDraftBlockRenderMap, Editor, EditorState, RichUtils} = require('draft-js');
-var {Editor, ContentState, EditorState, AppBar, RichUtils} = require('draft-js');
+var {Editor, convertFromRaw, convertToRaw, ContentState, EditorState, AppBar, RichUtils} = require('draft-js');
 const { Map } = require('immutable');
 import { ChromePicker } from 'react-color'
 import { Toolbar }from 'material-ui/Toolbar';
@@ -10,15 +10,17 @@ import FlatButton from 'material-ui/FlatButton';
 import FontIcon from 'material-ui/FontIcon';
 import { Popover }  from 'material-ui/Popover';
 import styles from '../styles/main.css';
+var axios = require('axios');
+
 
 const myBlockTypes = DefaultDraftBlockRenderMap.merge(new Map({
-  right: {
-    wrapper: <div className="right-align" />
-  },
-  center: {
-    wrapper: <div className="center-align" />
-  }
-})
+    right: {
+      wrapper: <div className="right-align" />
+    },
+    center: {
+      wrapper: <div className="center-align" />
+    }
+  })
 );
 
 class EditorView extends React.Component {
@@ -27,9 +29,54 @@ class EditorView extends React.Component {
     this.state = {
       editorState: EditorState.createEmpty(),
       inlineStyles: {},
-      currentFontSize: 12
+      currentFontSize: 12,
+      currentDocument: {}
     }
     this.onChange = (editorState) => this.setState({editorState});
+    console.log(this.props.match.params.id);
+  }
+
+  componentDidMount() {
+    // console.log("editorview component did mount");
+    var link = 'http://localhost:3000/currentdocument/' + this.props.match.params.id;
+    console.log("this is link", link);
+    axios({
+      method: 'GET',
+      url: link,
+    })
+    .then(response => {
+      if(this.IsJsonString(response.data.currentDocument.content)){
+        this.setState({currentDocument: response.data.currentDocument});
+        this.setState({editorState: EditorState.createWithContent(convertFromRaw(JSON.parse(response.data.currentDocument.content)))})
+      } else {
+        this.setState({
+          currentDocument: response.data.currentDocument,
+          editorState: EditorState.createEmpty()
+        })
+      }
+    })
+  }
+
+  onSave() {
+    // console.log("this is state.currentDocument", this.state.currentDocument);
+    // console.log("this is currentContent", JSON.stringify(this.state.editorState.getCurrentContent()));
+    axios({
+        method: 'POST',
+        url: 'http://localhost:3000/savedocument',
+        data: {
+            documentId: this.state.currentDocument._id,
+            content: JSON.stringify(convertToRaw(this.state.editorState.getCurrentContent()))
+        }
+    })
+    .then(response => {
+        console.log(response);
+        if(response.data.success){
+            console.log('updated the document');
+        }
+        else {
+          console.log("Error saving document");
+        }
+      })
 
   }
 
@@ -143,9 +190,18 @@ class EditorView extends React.Component {
           )
         }
 
-        onSave() {
-          console.log("this is currentContent", this.state.editorState.getCurrentContent());
+        IsJsonString(str) {
+          try {
+            JSON.parse(str);
+          } catch (e) {
+            return false;
+          }
+          return true;
         }
+
+        // onSave() {
+        //   console.log("this is currentContent", this.state.editorState.getCurrentContent());
+        // }
 
         render() {
           return (

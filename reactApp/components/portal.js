@@ -19,6 +19,8 @@ class Portal extends React.Component {
 
   componentDidMount() {
     //axios get request
+    // console.log("inside componentDidMount");
+    console.log("inside componentDidMount");
     axios({
       method: 'GET',
       url: 'http://localhost:3000/userdocuments',
@@ -30,13 +32,16 @@ class Portal extends React.Component {
         console.log("failed to create new doc");
       }
     })
+    console.log("firing off second Axios(post) request");
     axios({
       method: 'GET',
       url: 'http://localhost:3000/usershareddocuments'
     })
     .then(response => {
+      console.log("this is response to second request", response);
       if(response.data.success){
-        this.setState({sharedDocs: response.data.docs});
+        console.log("inside second get request");
+        this.setState({sharedDocs: response.data.sharedDocs});
       } else {
         console.log("failed to create new doc");
       }
@@ -63,6 +68,7 @@ class Portal extends React.Component {
   }
 
   addSharedDoc() {
+    console.log("entering addSharedDoc");
     axios({
       method: 'POST',
       url: 'http://localhost:3000/newcollaborator',
@@ -71,9 +77,11 @@ class Portal extends React.Component {
       }
     })
     .then(response => {
-      console.log("adding shared doc", response);
+      console.log("this is response from server", response);
       if(response.data.success) {
-        this.componentDidMount()
+        console.log("inside success");
+
+        this.componentDidMount();
       }
       else {}
     })
@@ -105,14 +113,14 @@ class Portal extends React.Component {
           <div>
             <h3>YOUR DOCS</h3>
             <ul>
-              {this.state.docs.map((document) => <li><Link to="/editorview">{document.title}</Link></li>)}
+              {this.state.docs.map((document) => <li key={document._id}><Link to={"/editorview/" + document._id}>{document.title}</Link></li>)}
             </ul>
           </div>
           <div>
             <br/>
             <h3>SHARED DOCS</h3>
             <ul>
-              {this.state.sharedDocs.map((document) => <li><Link to="/editorview">{document.title}</Link></li>)}
+              {this.state.sharedDocs.map((document) => <li key={document._id}><Link to="/editorview">{document.title}</Link></li>)}
             </ul>
             <TextField
               type="text"
