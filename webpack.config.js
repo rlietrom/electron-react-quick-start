@@ -24,6 +24,7 @@ module.exports = {
       }
     ]
   },
+  // target: 'node',
   stats: {
     colors: true
   },

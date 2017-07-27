@@ -4,16 +4,18 @@ var mongoose = require('mongoose');
 var passport = require('passport');
 var path = require('path');
 var LocalStrategy = require('passport-local').Strategy;
-
 var models = require('./models/models');
 var User = models.User;
-
 var routes = require('./routes/index');
 var auth = require('./routes/auth');
 
+var app = express();
+var server = require('http').Server(app);
+var io = require('socket.io')(server);
+
 connect = mongoose.connect(process.env.MONGODB_URI);
 
-var app = express();
+
 app.use(bodyParser.json());
 // app.use(bodyParser.urlencoded({ extended: false }));
 var session = require('express-session');
@@ -24,7 +26,6 @@ app.use(session({ secret: 'keyboard cat' }));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(express.static(path.join(__dirname, 'public')));
-
 
 // Tell Passport how to set req.user
 passport.serializeUser(function(user, done) {
@@ -65,12 +66,22 @@ passport.use(new LocalStrategy(function(username, password, done) {
 app.use('/', auth(passport));
 app.use('/', routes);
 
+io.on('connection', (socket) => {
+  console.log('a new client has connected')
+  socket.on('join', () => {
+    console.log('join')
+    io.sockets.emit('userJoined');
+  })
+  socket.on('disconnect', () => {
+    console.log('socket disconnected')
+  })
+})
 
 // Example route
 // app.get('/', function (req, res) {
 //   res.send('Hello World!')
 // })
 
-app.listen(3000, function () {
-  console.log('Backend server for Electron App running on port 3000!')
+server.listen(3000, function() {
+  console.log('server listening on 3000')
 })

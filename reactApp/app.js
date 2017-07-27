@@ -9,6 +9,8 @@ var Login = require('./components/login');
 var Registration = require('./components/registration');
 var Portal = require('./components/portal');
 require('./styles/main.css')
+// const socket = io('http://localhost:3000');
+
 // import EditorView from './components/editorView'
 
 /* This can check if your electron app can communicate with your backend */

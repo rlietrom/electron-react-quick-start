@@ -44,8 +44,8 @@ class Registration extends React.Component {
         <div>
           <center>
             <br/><br/>
-          <h1 style={{'font-family': 'verdana'}}>C U R L D O C S</h1>
-          <h3 style={{'font-family': 'verdana'}}>REGISTER</h3>
+          <h1 >C U R L D O C S</h1>
+          <h3 >REGISTER</h3>
           <TextField
             id="text-field-default"
             floatingLabelText="username"

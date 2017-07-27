@@ -11,6 +11,7 @@ import FontIcon from 'material-ui/FontIcon';
 import { Popover }  from 'material-ui/Popover';
 import styles from '../styles/main.css';
 
+
 const myBlockTypes = DefaultDraftBlockRenderMap.merge(new Map({
   right: {
     wrapper: <div className="right-align" />
@@ -27,10 +28,83 @@ class EditorView extends React.Component {
     this.state = {
       editorState: EditorState.createEmpty(),
       inlineStyles: {},
-      currentFontSize: 12
+      currentFontSize: 12,
     }
     this.onChange = (editorState) => this.setState({editorState});
+    this.previousHighlight = null;
 
+    this.socket = io.connect('http://localhost:3000')
+    this.socket.on('connect', () => {
+      console.log('socket connection made')
+    })
+    this.socket.on('userJoined', () => {
+      console.log('user joined')
+    })
+    this.socket.on('userLeft', () => {
+      console.log('user left');
+    })
+    this.socket.on('receivedNewContent', stringifiedContent => {
+      const ContentState = convertFromRaw(JSON.parse(stringifiedContent))
+      const newEditorState = EditorState.createWithContent(contentState)
+      this.setState({editorState: newEditorState})
+    })
+    this.socket.on('receiveNewCursor', incomingSelectionObj => {
+      console.log('inc', incomingSelectionObj)
+
+      let editorState = this.state.editorState;
+      const ogEditorState = editorState
+      const ogSelection = editorState.getSelection();
+
+      const incomingSelectionState = ogSelection.merge(incomingSelectionObj)
+
+      const temporaryEditorState = EditorState.forceSelection(ogEditorState, incomingSelectionState)
+
+      this.setState({editorState: temporaryEditorState}, () => {
+        const winSel = window.getSelection()
+        const range = winSel.getRangeAt(0)
+        const rects = range.getClientRects()[0]
+        const { top, left, bottom } = rects
+        this.setState({ editorState: ogEditorState, top, left, height: bottom - top})
+      })
+
+    })
+
+    this.socket.emit('join', {doc: 'docIDgoeshere'})
+    this.socket.on('errorMessage', message => {
+      console.log('socket errror', message)
+    });
+  }
+
+  onChange(editorState) {
+    const selection = editorState.getSelection()
+
+    if(this.previousHighlight) {
+      editorState = EditorState.acceptSelection(editorState, this.previousHighlight)
+      editorState = RichUtils.toggleInlineStyle(editorState, 'ITALIC')
+      editorState = EditorState.acceptSelection(editorState, selection)
+    }
+
+    editorState = RichUtils.toggleInlineStyle(editorState, 'ITALIC')
+    this.previousHighlight = editorState.getSelection(); //returns a selection state
+
+    if(selection.getStartOffset() === selection.getEndOffset()) {
+      this.socket.emit('cursorMove', selection)
+    }
+
+    const ContentState = editorState.getCurrentContent();
+    const stringifiedContent = JSON.stringify(convertToRaw(ContentState))
+
+    this.socket.emit('newContent', stringifiedContent)
+    this.setState({editorState})
+  }
+  //socket.io
+  componentDidMount() {
+
+
+  }
+
+  componentWillUnmount() {
+    this.socket.disconnect();
   }
 
   toggleFormat(e, style, block) {
@@ -144,12 +218,28 @@ class EditorView extends React.Component {
         }
 
         onSave() {
+          //const ContentState = this.state.editorState.getCurrentContent()
+          //const stringifiedContent = JSON.stringify(convertToRaw(ContentState))
+          // const docID = this.props.match.params.dochash
           console.log("this is currentContent", this.state.editorState.getCurrentContent());
+
+          //fetch post to send the json strifitied content in body
         }
 
         render() {
           return (
             <div>
+              {this.state.top && (
+                <div
+                  style={{
+                    position: 'absolute',
+                    backgroundColor: 'blue',
+                    width:'3px',
+                    height: this.state.height;
+                    top: this.state.top,
+                    left: this.state.left
+                  }}></div>
+              )}
               <div className="toolbar">
                 {this.formatButton({icon: 'format_bold', style:'BOLD'})}
                 {this.formatButton({icon: 'format_italic', style:'ITALIC'})}
@@ -164,6 +254,7 @@ class EditorView extends React.Component {
                 {this.formatButton({icon: 'format_align_right', style: 'right', block: true})}
                 {this.increaseFontSize(false)}
                 {this.increaseFontSize(true)}
+                <FlatButton onClick={() => this.onSave()}>Save Document</FlatButton>
               </div>
               <div className='editor'>
                 <Editor
@@ -174,7 +265,7 @@ class EditorView extends React.Component {
                   blockRenderMap={myBlockTypes}
                 />
               </div>
-              <FlatButton onClick={() => this.onSave()}>Save Document</FlatButton>
+
             </div>
           )
         }
