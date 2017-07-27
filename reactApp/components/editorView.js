@@ -10,17 +10,20 @@ import FlatButton from 'material-ui/FlatButton';
 import FontIcon from 'material-ui/FontIcon';
 import { Popover }  from 'material-ui/Popover';
 import styles from '../styles/main.css';
+// var Link = require('react-router-dom');
+import {Redirect, Link} from 'react-router-dom';
 var axios = require('axios');
+var io = require('socket.io-client'); //client side socket connection
 
 
 const myBlockTypes = DefaultDraftBlockRenderMap.merge(new Map({
-    right: {
-      wrapper: <div className="right-align" />
-    },
-    center: {
-      wrapper: <div className="center-align" />
-    }
-  })
+  right: {
+    wrapper: <div className="right-align" />
+  },
+  center: {
+    wrapper: <div className="center-align" />
+  }
+})
 );
 
 class EditorView extends React.Component {
@@ -32,14 +35,83 @@ class EditorView extends React.Component {
       currentFontSize: 12,
       currentDocument: {}
     }
-    this.onChange = (editorState) => this.setState({editorState});
-    console.log(this.props.match.params.id);
+    // this.onChange = (editorState) => {
+    //   // const selection = editorState.getSelection();
+    //   //
+    //   // if(this.previousHighlight){
+    //   //   editorState = EditorState.acceptSelection(editorState, this.previousHighlight);
+    //   //   editorState = RichUtils.toggleInlineStyle(editorState, 'RED');
+    //   //   editorState = EditorState.acceptSelection(editorState, selection);
+    //   // }
+    //   //
+    //   // editorState = RichUtils.toggleInlineStyle(editorState, 'RED');
+    //   // this.previousHighlight = editorState.getSelection();
+    //
+    //   // if(selection.getStartOffset() !== selection.getEndOffset()) {
+    //   //
+    //   // }
+    //
+    //   var contentState = editorState.getCurrentContent();
+    //   // console.log("this is contentState inside onChange", contentState);
+    //   var stringifiedContent = JSON.stringify(convertToRaw(contentState));
+    //   // console.log("this is stringifiedContent iside onChange", stringifiedContent);
+    //
+    //   //these two lines TODO:
+    //   var newEditorState = EditorState.createWithContent(contentState)
+    //   this.setState({editorState: newEditorState});
+    //
+    //   this.socket.emit('newContent', {stringifiedContent: stringifiedContent});
+    // };
+    console.log("this is props id", this.props.match.params.id);
+    //these are async
+    this.socket = io('http://localhost:3000');
+    //set up the listener before the emitter
+    //to prevent race conditions, and a helloback returning
+    //before you set up the helloback listener
+    this.socket.on('helloBack', () => {
+      console.log("hello back");
+    })
+    this.socket.on('userJoined', () => {
+      console.log("user joined");
+    })
+    this.socket.on('userLeft', () => {
+      console.log("user left");
+    })
+    this.socket.on('receiveNewContent', ({stringifiedContent}) => {
+      console.log(stringifiedContent);
+      var contentState = convertFromRaw(JSON.parse(stringifiedContent));
+      var newEditorState = EditorState.createWithContent(contentState);
+      this.setState({editorState: newEditorState});
+    })
+    // this.socket.emit('hello', {'name': 'ryan'});
+    //docId could be props, but I use the result of the axios request in componentDidMont
+    //...which could be a problem
+    this.socket.emit('join', {'docId': this.props.match.params.id})
+    //TODO: in componentWillUnmount we put a this.socket.emit('dicsonnect') event emitter or this.socket.disconnect();
+  }
+
+  onChange(editorState) {
+    // const contentState = editorState.getCurrentContent();
+    // this.setState({editorState});
+    var contentState = editorState.getCurrentContent();
+    var stringifiedContent = JSON.stringify(convertToRaw(contentState));
+    // console.log("this is stringifiedContent iside onChange", stringifiedContent);
+
+    //these two lines TODO:
+    var newEditorState = EditorState.createWithContent(contentState)
+    this.setState({editorState: newEditorState});
+
+    this.socket.emit('newContent', {stringifiedContent: stringifiedContent});
+
   }
 
   componentDidMount() {
     // console.log("editorview component did mount");
+    console.log("entering component did mount")
+    console.log("this is props id", this.props.match.params.id);
+
     var link = 'http://localhost:3000/currentdocument/' + this.props.match.params.id;
-    console.log("this is link", link);
+    // console.log("this is link", link);
     axios({
       method: 'GET',
       url: link,
@@ -57,26 +129,30 @@ class EditorView extends React.Component {
     })
   }
 
+  componentWillUnmount() {
+    this.socket.emit('disconnect');
+  }
+
   onSave() {
     // console.log("this is state.currentDocument", this.state.currentDocument);
     // console.log("this is currentContent", JSON.stringify(this.state.editorState.getCurrentContent()));
     axios({
-        method: 'POST',
-        url: 'http://localhost:3000/savedocument',
-        data: {
-            documentId: this.state.currentDocument._id,
-            content: JSON.stringify(convertToRaw(this.state.editorState.getCurrentContent()))
-        }
+      method: 'POST',
+      url: 'http://localhost:3000/savedocument',
+      data: {
+        documentId: this.state.currentDocument._id,
+        content: JSON.stringify(convertToRaw(this.state.editorState.getCurrentContent()))
+      }
     })
     .then(response => {
-        console.log(response);
-        if(response.data.success){
-            console.log('updated the document');
-        }
-        else {
-          console.log("Error saving document");
-        }
-      })
+      // console.log(response);
+      if(response.data.success){
+        console.log('Document saved');
+      }
+      else {
+        console.log("Error saving document");
+      }
+    })
 
   }
 
@@ -160,7 +236,7 @@ class EditorView extends React.Component {
         }
 
         applyIncreaseFontSize(shrink) {
-          console.log("test", shrink)
+          // console.log("test", shrink)
           var newFontSize = this.state.currentFontSize + (shrink ? -4 : 4);
           var newInlineStyles = Object.assign(
             {},
@@ -171,7 +247,7 @@ class EditorView extends React.Component {
               }
             }
           )
-          console.log("shrink", shrink)
+          // console.log("shrink", shrink)
           this.setState({
             inlineStyles: newInlineStyles,
             editorState: RichUtils.toggleInlineStyle(this.state.editorState, String(newFontSize)),
@@ -226,11 +302,35 @@ class EditorView extends React.Component {
                   ref="editor"
                   customStyleMap={this.state.inlineStyles}
                   editorState={this.state.editorState}
-                  onChange={this.onChange}
+                  onChange={(editorState) => this.onChange(editorState)}
                   blockRenderMap={myBlockTypes}
                 />
               </div>
-              <FlatButton onClick={() => this.onSave()}>Save Document</FlatButton>
+              <div>
+                <FlatButton
+                  onClick={() => this.onSave()}
+                  label="Save"></FlatButton>
+                {/* <FlatButton
+                  label="Save and return to menu"
+                  containerElement={<Link to='/portal'/>}
+                  linkButton={true}
+                  ></FlatButton> */}
+                {/* <FlatButton
+                  fullWidth={false}
+                  hoverColor='#B39DDB'
+                  label="Save and Back to Menu"
+                  containerElement={<Link to="/portal" />}
+                  >
+
+                </FlatButton> */}
+                <FlatButton
+                  fullWidth={false}
+                  onClick={() => this.onSave()}
+                  label="Save and Return to Menu"
+                  containerElement={<Link to="/portal" />}
+                  >
+                </FlatButton>
+              </div>
             </div>
           )
         }
