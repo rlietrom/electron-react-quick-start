@@ -35,6 +35,7 @@ class EditorView extends React.Component {
       currentDocument: {}
     }
     // console.log("this is props id", this.props.match.params.id);
+    // this.currentFontSize = 12;
     this.previousHighlight = null;
     this.socket = io('http://localhost:3000');
     //set up the listener before the emitter to prevent race conditions, and a
@@ -49,17 +50,19 @@ class EditorView extends React.Component {
       console.log("user left");
     })
     this.socket.on('receiveNewContent', ({stringifiedContent}) => {
-      console.log("incoming receiveNewContent stringifiedContent", stringifiedContent);
+      // console.log("incoming receiveNewContent stringifiedContent", stringifiedContent);
 
       var contentState = convertFromRaw(JSON.parse(stringifiedContent));
       var newEditorState = EditorState.createWithContent(contentState);
       this.setState({editorState: newEditorState});
     })
     this.socket.on('receiveNewCursor', incomingSelectionObj => {
-      console.log('incoming receiveNewCursor object', incomingSelectionObj);
+      console.log('incoming selection object', incomingSelectionObj);
+
       let editorState = this.state.editorState;
       const ogEditorState = editorState;
       const ogSelection = editorState.getSelection();
+      console.log("ogSelection", ogSelection);
 
       const incomingSelectionState = ogSelection.merge(incomingSelectionObj);
 
@@ -96,8 +99,11 @@ class EditorView extends React.Component {
       console.log('cursor selection', selection);
       this.socket.emit('cursorMove', selection);
     } else {
+      console.log("highlight selection", selection);
       editorState = RichUtils.toggleInlineStyle(editorState, 'RED');
       this.previousHighlight = editorState.getSelection();
+      // TODO:::::
+      this.socket.emit('cursorMove', {selection});
     }
 
     const contentState = editorState.getCurrentContent();
@@ -106,7 +112,7 @@ class EditorView extends React.Component {
     const stringifiedContent = JSON.stringify(convertToRaw(contentState));
     // console.log("stringifiedContent", stringifiedContent);
     this.socket.emit('newContent', {stringifiedContent});
-    this.setState({editorState});
+    this.setState({editorState: editorState});
   }
 
   componentDidMount() {
@@ -125,6 +131,7 @@ class EditorView extends React.Component {
         this.setState({currentDocument: response.data.currentDocument});
         this.setState({editorState: EditorState.createWithContent(convertFromRaw(JSON.parse(response.data.currentDocument.content)))})
       } else {
+        // this.currentDocument = response.data.currentDocument;
         this.setState({
           currentDocument: response.data.currentDocument,
           editorState: EditorState.createEmpty()
