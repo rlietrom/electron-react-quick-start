@@ -5,6 +5,7 @@ var injectTapEventPlugin = require('react-tap-event-plugin')
 // var EditorView = require('./components/editorView');
 import {Switch, Redirect, Route, HashRouter, BrowserRouter} from 'react-router-dom';
 var EditorView = require('./components/editorView');
+import HistoryView from './components/historyView';
 var Login = require('./components/login');
 var Registration = require('./components/registration');
 var Portal = require('./components/portal');
@@ -29,6 +30,7 @@ ReactDOM.render(
         <Route path='/register' component={Registration}/>
         <Route path='/portal' component={Portal}/>
         <Route path='/editorview/:id' component={EditorView}/>
+        <Route path='/history/:id' component={HistoryView}/>
      </div>
     </MuiThemeProvider>
   </HashRouter>,
