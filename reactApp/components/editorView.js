@@ -30,9 +30,13 @@ class EditorView extends React.Component {
     super(props)
     this.state = {
       editorState: EditorState.createEmpty(),
-      inlineStyles: {},
+      inlineStyles: {
+        "HIGHLIGHT": {
+          backgroundColor: 'white'
+        }
+      },
       currentFontSize: 12,
-      currentDocument: {},
+      currentDocument: {}
     }
     // console.log("this is props id", this.props.match.params.id);
     // this.currentFontSize = 12;
@@ -57,7 +61,7 @@ class EditorView extends React.Component {
       this.setState({editorState: newEditorState});
     })
     this.socket.on('receiveNewCursor', incomingSelectionObj => {
-      // console.log('incoming selection object', incomingSelectionObj);
+      console.log('incoming selection object', incomingSelectionObj);
 
       let editorState = this.state.editorState;
       const ogEditorState = editorState;
@@ -70,19 +74,25 @@ class EditorView extends React.Component {
 
       this.setState({ editorState : temporaryEditorState}, () => {
         //callback for once the state is set bc setState is kindof asynchronous
-       const winSel = window.getSelection();
-       const range = winSel.getRangeAt(0);
-       const rects = range.getClientRects()[0];
-       console.log("range", range);
-       console.log("rects", rects);
-       const { top, left, bottom } = rects;
-       this.setState({ editorState: ogEditorState, top, left, height: bottom - top});
-     });
+        const winSel = window.getSelection();
+        const range = winSel.getRangeAt(0);
+        const rects = range.getClientRects()[0];
+        console.log("range", range);
+        console.log("rects", rects);
+        const { top, left, bottom } = rects;
+        this.setState({ editorState: ogEditorState, top, left, height: bottom - top});
+      });
 
-   });
+    });
     //docId could be props, but I use the result of the axios request in componentDidMont
     //...which could be a problem
     this.socket.emit('join', {'docId': this.props.match.params.id});
+
+    // backgroundColor: '#B39DDB',
+    //
+    // var HIGHLIGHT = {
+    //   backgroundColor: 'blue',
+    // };
   }
 
   onChange(editorState) {
@@ -90,20 +100,20 @@ class EditorView extends React.Component {
 
     if (this.previousHighlight) {
       editorState = EditorState.acceptSelection(editorState, this.previousHighlight);
-      editorState = RichUtils.toggleInlineStyle(editorState, 'RED');
+      editorState = RichUtils.toggleInlineStyle(editorState, 'HIGHLIGHT');
       editorState = EditorState.acceptSelection(editorState, selection);
       this.previousHighlight = null;
     }
 
     if (selection.getStartOffset() === selection.getEndOffset()) {
-      // console.log('cursor selection', selection);
+      console.log('cursor selection', selection);
       this.socket.emit('cursorMove', selection);
     } else {
       console.log("highlight selection", selection);
-      editorState = RichUtils.toggleInlineStyle(editorState, 'RED');
+      editorState = RichUtils.toggleInlineStyle(editorState, 'HIGHLIGHT');
       this.previousHighlight = editorState.getSelection();
       // TODO:::::
-      this.socket.emit('cursorMove', {selection});
+      // this.socket.emit('cursorMove', {selection});
     }
 
     const contentState = editorState.getCurrentContent();
@@ -150,19 +160,19 @@ class EditorView extends React.Component {
       url: 'http://localhost:3000/savedocument',
       data: {
         documentId: this.state.currentDocument._id,
-        content: JSON.stringify(convertToRaw(this.state.editorState.getCurrentContent())),
-        time: Date.now()
+        content: JSON.stringify(convertToRaw(this.state.editorState.getCurrentContent()))
       }
     })
     .then(response => {
+      // console.log(response);
       if(response.data.success){
         console.log('Document saved');
-        console.log()
       }
       else {
         console.log("Error saving document");
       }
     })
+
   }
 
   toggleFormat(e, style, block) {
@@ -170,39 +180,37 @@ class EditorView extends React.Component {
     if(block) {
       this.setState({
         editorState: RichUtils.toggleBlockType(this.state.editorState, style)})
-      }
-      else {
-        this.setState({
-          editorState: RichUtils.toggleInlineStyle(this.state.editorState, style)
-        })
-      }
     }
-
-    formatButton({icon, style, block}) {
-      return (
-        <FlatButton
-          fullWidth={false}
-          hoverColor='#B39DDB'
-          backgroundColor={this.state.editorState.getCurrentInlineStyle().has(style) ? 'WhiteSmoke' : 'white'}
-          onMouseDown={(e) => this.toggleFormat(e, style, block)}
-          icon={<FontIcon className="material-icons">{icon}</FontIcon>}
-        />
-      )
-    }
-
-    openColorPicker(e) {
-      this.setState({
-        colorPickerOpen: true,
-        colorPickerButton: e.target
-      })
-
-    }
-    closeColorPicker(e) {
-      this.setState({
-        colorPickerOpen: false,
-        // colorPickerButton: e.target()
+    else {
+      this.setState({editorState: RichUtils.toggleInlineStyle(this.state.editorState, style)
       })
     }
+  }
+
+  formatButton({icon, style, block}) {
+    return (
+      <FlatButton
+        fullWidth={false}
+        backgroundColor={this.state.editorState.getCurrentInlineStyle().has(style) ? 'WhiteSmoke' : 'white'}
+        onMouseDown={(e) => this.toggleFormat(e, style, block)}
+        icon={<FontIcon className="material-icons">{icon}</FontIcon>}
+      />
+    )
+  }
+
+  openColorPicker(e) {
+    this.setState({
+      colorPickerOpen: true,
+      colorPickerButton: e.target
+    })
+  }
+
+  closeColorPicker(e) {
+    this.setState({
+      colorPickerOpen: false,
+      // colorPickerButton: e.target()
+    })
+  }
 
     formatColor(color) {
       var newInlineStyles = Object.assign(
@@ -227,7 +235,6 @@ class EditorView extends React.Component {
           <FlatButton
             fullWidth={false}
             label=""
-            hoverColor='#B39DDB'
             onClick={this.openColorPicker.bind(this)}
             icon={<FontIcon className="material-icons">format_paint</FontIcon>}
           />
@@ -247,6 +254,7 @@ class EditorView extends React.Component {
         }
 
         applyIncreaseFontSize(shrink) {
+          // console.log("test", shrink)
           var newFontSize = this.state.currentFontSize + (shrink ? -4 : 4);
           var newInlineStyles = Object.assign(
             {},
@@ -257,6 +265,7 @@ class EditorView extends React.Component {
               }
             }
           )
+          // console.log("shrink", shrink)
           this.setState({
             inlineStyles: newInlineStyles,
             editorState: RichUtils.toggleInlineStyle(this.state.editorState, String(newFontSize)),
@@ -268,7 +277,6 @@ class EditorView extends React.Component {
           return (
             <FlatButton
               fullWidth={false}
-              hoverColor='#B39DDB'
               label=""
               onMouseDown={this.applyIncreaseFontSize.bind(this, shrink)}
               icon={<FontIcon className="material-icons">{shrink ? 'zoom_in' : 'zoom_out'}</FontIcon>}
@@ -284,6 +292,10 @@ class EditorView extends React.Component {
           }
           return true;
         }
+
+        // onSave() {
+        //   console.log("this is currentContent", this.state.editorState.getCurrentContent());
+        // }
 
         render() {
           return (
@@ -312,33 +324,30 @@ class EditorView extends React.Component {
                   blockRenderMap={myBlockTypes}
                 />
               </div>
-              <br/>
-              <div class="buttonDiv">
-              <FlatButton
-                label="Save"
-                fullWidth={false}
-                onClick={() => this.onSave()}>
-               </FlatButton>
-              <FlatButton
-                fullWidth={false}
-                onClick={() => this.onSave()}
-                label="Back"
-                containerElement={<Link to={"/portal/:" + this.props.match.params.id}/>}
-                >
-              </FlatButton>
-              <FlatButton
-                fullWidth={false}
-                onClick={() => this.onSave()}
-                label="Version Histories"
-                containerElement={<Link to={"/history/" + this.props.match.params.id}/>}
-                >
-                 </FlatButton>
-              <h4>SHARE THIS DOC ID: {this.state.currentDocument._id}</h4>
-            </div>
-
-            </div>
-          )
+              <div>
+                <FlatButton
+                  onClick={() => this.onSave()}
+                  label="Save">
+                </FlatButton>
+                <FlatButton
+                  fullWidth={false}
+                  onClick={() => this.onSave()}
+                  label="Save and Return to Menu"
+                  containerElement={<Link to="/portal" />}
+                  >
+                  </FlatButton>
+                </div>
+              </div>
+            )
+          }
         }
-      }
 
-      module.exports = EditorView;
+        // const styleMap = {
+        //   'CUSTOM': {
+        //     textDecoration: 'line-through',
+        //     color: 'red',
+        //     float: 'right'
+        //   },
+        // }
+
+        module.exports = EditorView;
