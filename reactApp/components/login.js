@@ -53,7 +53,7 @@ class Login extends React.Component {
         <div>
           <center>
             <br/><br/>
-          <h1>C U R L D O C S</h1>
+          <h1>R E E D O C S</h1>
           <h3>LOGIN</h3>
 
           <TextField
@@ -82,6 +82,7 @@ class Login extends React.Component {
             onClick={() => this.onSubmit()}
           />
           <FlatButton
+            style={{'display': 'flex'}}
             fullWidth={false}
             hoverColor='#B39DDB'
             label="Register"

@@ -29,7 +29,8 @@ var documentSchema = new Schema({
   password: String,
   title: String,
   collaborators: Array, //array of user ID's
-  content: Object
+  content: Object,
+  history: Array
 });
 
 
