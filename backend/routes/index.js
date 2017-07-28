@@ -29,20 +29,22 @@ router.post('/createnewdocument', function(req, res){
     password: "12345",
     title: req.body.title,
     collaborators: [],
-    content: {}
+    content: {},
+    history: [],
   })
   console.log("this is newDocument: ", newDocument);
   newDocument.save(function(err, doc){
     if(err){
-      console.log(err)
+      console.log('CREATE NEW DOC ERROR', err)
     } else {
+      console.log('NEW DOC CREATED< SUCCESS')
       res.json({success: true, document: newDocument})
     }
   })
 });
 
 router.get('/gethistory/:id', function(req, res) {
-    Document.findById({req.params.id})
+    Document.findById(req.params.id)
     .then((doc) => {
         res.json({success: true, document: doc})
     })
@@ -58,23 +60,13 @@ router.post('/newcollaborator', function(req, res){
       if(err){
         console.log(err)
       } else {
-        // res.json({success: true, document: doc})
-        // console.log("here here");
-        // console.log("this is doc", doc);
         User.findById(req.user._id)
         .then((ussr) => {
-          //  console.log("inside user.findById");
-          //  console.log("This is user/ussr", ussr);
-          //  console.log("this is doc", doc);
           ussr.documentsSharedWithMe.push(doc._id)
-          //  console.log("this is update ussr", ussr);
           ussr.save(function(err){
             if(err){
-              //  console.log("inside erroor")
               console.log(err)
             } else {
-              //  console.log("this is working");
-              //  console.log(ussr);
               res.json({success: true, user: ussr});
             }
           })
@@ -85,8 +77,6 @@ router.post('/newcollaborator', function(req, res){
 });
 
 router.get('/currentdocument/:id', function(req, res){
-  // console.log("hit get current document route");
-  // console.log("this is req.params.id", req.params.id);
   Document.findById(req.params.id)
   .then((doc) => res.json({success: true, currentDocument: doc}))
 })
