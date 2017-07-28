@@ -55,7 +55,6 @@ class Login extends React.Component {
             <br/><br/>
           <h1>R E E D O C S</h1>
           <h3>LOGIN</h3>
-
           <TextField
             hintText="username"
             floatingLabelText="username"
@@ -74,6 +73,7 @@ class Login extends React.Component {
             type="password"
             name="password"
           /><br /><br/>
+
           <FlatButton
             style={{'display': 'flex'}}
             fullWidth={false}

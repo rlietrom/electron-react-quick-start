@@ -62,8 +62,10 @@ class Portal extends React.Component {
             console.log("DOCUMENT RESPONSE", response);
             if(response.data.success){
                 console.log("created new document");
-                this.setState({docs: this.state.docs.concat(response.data.document)})
-                // this.componentDidMount();
+                this.setState({
+                  docs: this.state.docs.concat(response.data.document),
+                  title: ""})
+                console.log('THIS STATE DOCS AFTER SETSTATE', this.state.docs)
             } else {
                 console.log("failed to create new doc");
             }
@@ -83,7 +85,9 @@ class Portal extends React.Component {
             console.log("this is response from server", response);
             if(response.data.success) {
                 console.log("inside success");
-                this.componentDidMount();
+                this.setState({
+                  sharedDocs: this.state.sharedDocs.concat(response.data.doc),
+                  sharedId: "" })
             }
             else {}
         })
@@ -95,6 +99,7 @@ class Portal extends React.Component {
             type="text"
             floatingLabelStyle={{'color': '#B39DDB'}}
             underlineFocusStyle={{'borderBottom': 'solid #000000'}}
+            value={this.state.title}
             onChange={(e) => this.setState({title: e.target.value})}
             name="newDoc"
             hintText="New Document Name"
@@ -116,11 +121,66 @@ class Portal extends React.Component {
       )
     }
 
-    // formatDocsList() {
-    //   return (
-    //
-    //   )
-    // }
+    formatDocsList() {
+      return (
+        <div>
+            {this.state.docs.map((document) =>
+                // <li key={document._id}>
+                    <FlatButton
+                        fullWidth={false}
+                        hoverColor='#B39DDB'
+                        label={document.title}
+                        containerElement={<Link to={"/editorview/" + document._id}>{document.title}</Link>}
+                        >
+                    </FlatButton>
+            )}
+        </div>
+      )
+    }
+
+    formatSharedDocsList() {
+      return (
+        <div>
+        {this.state.sharedDocs.map((document) =>
+                <FlatButton
+                    fullWidth={false}
+                    hoverColor='#B39DDB'
+                    label={document.title}
+                    containerElement={<Link to={"/editorview/" + document._id}>{document.title}</Link>}
+                    >
+                </FlatButton>
+        )}
+        </div>
+      )
+    }
+
+    formatSharedTextField() {
+      return (
+        <TextField
+            type="text"
+            name="newDoc"
+            floatingLabelText="Document ID"
+            hintText="Document ID"
+            floatingLabelStyle={{'color': '#B39DDB'}}
+            value={this.state.sharedId}
+            underlineFocusStyle={{'borderBottom': 'solid #000000'}}
+            onChange={(e) => this.setState({sharedId: e.target.value})}
+        >
+        </TextField>
+      )
+    }
+
+    formatSharedFlatButton() {
+      return (
+        <FlatButton
+            fullWidth={false}
+                hoverColor='#B39DDB'
+                icon={<FontIcon className="material-icons">fingerprint</FontIcon>}
+                onClick={() => this.addSharedDoc()}
+                >
+        </FlatButton>
+      )
+    }
 
     render() {
         return (
@@ -129,68 +189,21 @@ class Portal extends React.Component {
                     <center>
                         <h1>C U R L D O C S</h1>
                     </center>
-                    <br/> <br/>
-                    <div style={{'padding': '35'}}>
+                    <div style={{'padding': '15'}}>
+                      <div className='portalbox'>
                         <h3>YOUR DOCS</h3>
+                        {this.formatDocsList()}
                         {this.formatTextField()}
                         {this.formatFlatButton()}
-                        {/* {this.formatDocsList()} */}
+                      </div>
+                      <div>
+                        <h3>SHARED DOCS</h3>
+                        {this.formatSharedDocsList()}
+                        {this.formatSharedTextField()}
+                        {this.formatSharedFlatButton()}
+                      </div>
                     </div>
-                    <ul style={{'listStyleType': 'none', 'margin': '0', 'padding': '0'}}>
-                        {this.state.docs.map((document) =>
-                            <li key={document._id}>
-                                <FlatButton
-                                    fullWidth={false}
-                                    hoverColor='#B39DDB'
-                                    label={document.title}
-                                    containerElement={<Link to={"/editorview/" + document._id}>{document.title}</Link>}
-                                    >
-                                </FlatButton>
-                            </li>
-                            //THIS SHOULD BE IN COMPONENT DID MOUNT!!!
-                        )}
-                    </ul>
-                    <br/>
-                    <h3>SHARED DOCS</h3>
-                    {/* <ul style={{'listStyleType': 'none'}}>
-                        {this.state.sharedDocs.map((document) =>
-                            <li key={document._id}>
-                                <FlatButton
-                                    fullWidth={false}
-                                    hoverColor='#B39DDB'
-                                    label={document.title}
-                                    containerElement={<Link to="/editorview">{document.title}</Link>}
-                                    >
-                                </FlatButton>
-                            </li>
-                        )}
-                        {this.state.sharedDocs.map((document) => <li key={document._id}><Link to={"/editorview/" + document._id}>{document.title}</Link></li>)}
-                    </ul>
-                    <div>
-                        <TextField
-                            type="text"
-                            name="newDoc"
-                            floatingLabelText="Document ID"
-                            hintText="Document ID"
-                            floatingLabelStyle={{'color': '#B39DDB'}}
-                            underlineFocusStyle={{'borderBottom': 'solid #000000'}}
-                            onChange={(e) => this.setState({sharedId: e.target.value})}
-                        >
-                        </TextField>
-                        <FlatButton
-                            fullWidth={false}
-                                hoverColor='#B39DDB'
-                                icon={<FontIcon className="material-icons">fingerprint</FontIcon>}
-                                onClick={() => this.addSharedDoc()}
-                                >
-                        </FlatButton>
-                    </div> */}
-                    <br/> <br/> <br/>
-                    <center>
-                        <h3>YOUR DOCS</h3>
-
-                    </center>
-                </div>
+                    </div>
             </HashRouter>
         )
     }
