@@ -150,19 +150,19 @@ class EditorView extends React.Component {
       url: 'http://localhost:3000/savedocument',
       data: {
         documentId: this.state.currentDocument._id,
-        content: JSON.stringify(convertToRaw(this.state.editorState.getCurrentContent()))
+        content: JSON.stringify(convertToRaw(this.state.editorState.getCurrentContent())),
+        time: Date.now()
       }
     })
     .then(response => {
-      // console.log(response);
       if(response.data.success){
         console.log('Document saved');
+        console.log()
       }
       else {
         console.log("Error saving document");
       }
     })
-
   }
 
   toggleFormat(e, style, block) {
@@ -287,10 +287,6 @@ class EditorView extends React.Component {
           return true;
         }
 
-        // onSave() {
-        //   console.log("this is currentContent", this.state.editorState.getCurrentContent());
-        // }
-
         render() {
           return (
             <div>
@@ -326,7 +322,7 @@ class EditorView extends React.Component {
                 <FlatButton
                   fullWidth={false}
                   onClick={() => this.onSave()}
-                  label="Save and Return to Menu"
+                  label="Back"
                   containerElement={<Link to="/portal" />}
                   >
                 </FlatButton>

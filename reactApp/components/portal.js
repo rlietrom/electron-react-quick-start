@@ -58,7 +58,7 @@ class Portal extends React.Component {
             }
         })
         .then(response => {
-            console.log(response);
+            console.log("DOCUMENT RESPONSE", response);
             if(response.data.success){
                 console.log("created new document");
                 this.componentDidMount();
@@ -172,6 +172,8 @@ class Portal extends React.Component {
                                             >
                                         </FlatButton>
                                     </li>
+                                    //THIS SHOULD BE IN COMPONENT DID MOUNT!!!
+
                                 )}
                             </ul>
                     </center>

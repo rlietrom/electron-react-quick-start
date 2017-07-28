@@ -24,8 +24,6 @@ router.get('/userdocuments', function(req, res){
 })
 
 router.post('/createnewdocument', function(req, res){
-  // console.log("this is req.user",req.user);
-
   var newDocument = new Document({
     author: req.user._id,
     password: "12345",
@@ -42,6 +40,13 @@ router.post('/createnewdocument', function(req, res){
     }
   })
 });
+
+router.get('/gethistory/:id', function(req, res) {
+    Document.findById({req.params.id})
+    .then((doc) => {
+        res.json({success: true, document: doc})
+    })
+})
 
 
 router.post('/newcollaborator', function(req, res){
@@ -87,20 +92,16 @@ router.get('/currentdocument/:id', function(req, res){
 })
 
 router.post('/savedocument', function(req, res){
-  // console.log("hit savedocument route");
-  // console.log("this is docId", req.body.documentId)
   Document.findById(req.body.documentId)
   .then((doc) => {
-    // console.log("indside .then savde route");
-    // console.log("this is doc", doc);
-    // console.log("this is req.body.documentId", req.body.documentId);
+      doc.history.push({time: req.body.time, content: req.body.content})
     doc.content = req.body.content
-    // console.log("this is req.body.content", req.body.content);
-    // console.log("this is doc.content", doc.content);
+    console.log('HISTROY', doc.history)
     doc.save(function(err){
       if(err){
         console.log(err)
       } else {
+        res.json({success:true})
         console.log("document content has been saved")
       }
     })
