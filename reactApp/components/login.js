@@ -7,6 +7,7 @@ var Portal = require('./portal');
 import TextField from 'material-ui/TextField';
 import FlatButton from 'material-ui/FlatButton';
 import styles from '../styles/main.css';
+var io = require('socket.io-client'); //client side socket connection
 
 class Login extends React.Component {
   constructor(props) {
@@ -16,6 +17,7 @@ class Login extends React.Component {
       password: "",
       loggedIn: false
     }
+
   }
 
   onSubmit() {

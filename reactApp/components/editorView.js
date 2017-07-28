@@ -10,17 +10,19 @@ import FlatButton from 'material-ui/FlatButton';
 import FontIcon from 'material-ui/FontIcon';
 import { Popover }  from 'material-ui/Popover';
 import styles from '../styles/main.css';
+import {Redirect, Link} from 'react-router-dom';
 var axios = require('axios');
+var io = require('socket.io-client'); //client side socket connection
 
 
 const myBlockTypes = DefaultDraftBlockRenderMap.merge(new Map({
-    right: {
-      wrapper: <div className="right-align" />
-    },
-    center: {
-      wrapper: <div className="center-align" />
-    }
-  })
+  right: {
+    wrapper: <div className="right-align" />
+  },
+  center: {
+    wrapper: <div className="center-align" />
+  }
+})
 );
 
 class EditorView extends React.Component {
@@ -32,14 +34,94 @@ class EditorView extends React.Component {
       currentFontSize: 12,
       currentDocument: {}
     }
-    this.onChange = (editorState) => this.setState({editorState});
-    console.log(this.props.match.params.id);
+    // console.log("this is props id", this.props.match.params.id);
+    // this.currentFontSize = 12;
+    this.previousHighlight = null;
+    this.socket = io('http://localhost:3000');
+    //set up the listener before the emitter to prevent race conditions, and a
+    //helloback returning before you set up the helloback listener
+    this.socket.on('helloBack', () => {
+      console.log("hello back");
+    })
+    this.socket.on('userJoined', () => {
+      console.log("user joined");
+    })
+    this.socket.on('userLeft', () => {
+      console.log("user left");
+    })
+    this.socket.on('receiveNewContent', ({stringifiedContent}) => {
+      // console.log("incoming receiveNewContent stringifiedContent", stringifiedContent);
+
+      var contentState = convertFromRaw(JSON.parse(stringifiedContent));
+      var newEditorState = EditorState.createWithContent(contentState);
+      this.setState({editorState: newEditorState});
+    })
+    this.socket.on('receiveNewCursor', incomingSelectionObj => {
+      console.log('incoming selection object', incomingSelectionObj);
+
+      let editorState = this.state.editorState;
+      const ogEditorState = editorState;
+      const ogSelection = editorState.getSelection();
+      console.log("ogSelection", ogSelection);
+
+      const incomingSelectionState = ogSelection.merge(incomingSelectionObj);
+
+      const temporaryEditorState = EditorState.forceSelection(ogEditorState, incomingSelectionState);
+
+      this.setState({ editorState : temporaryEditorState}, () => {
+        //callback for once the state is set bc setState is kindof asynchronous
+       const winSel = window.getSelection();
+       const range = winSel.getRangeAt(0);
+       const rects = range.getClientRects()[0];
+       console.log("range", range);
+       console.log("rects", rects);
+       const { top, left, bottom } = rects;
+       this.setState({ editorState: ogEditorState, top, left, height: bottom - top});
+     });
+
+   });
+    //docId could be props, but I use the result of the axios request in componentDidMont
+    //...which could be a problem
+    this.socket.emit('join', {'docId': this.props.match.params.id});
+  }
+
+  onChange(editorState) {
+    const selection = editorState.getSelection();
+
+    if (this.previousHighlight) {
+      editorState = EditorState.acceptSelection(editorState, this.previousHighlight);
+      editorState = RichUtils.toggleInlineStyle(editorState, 'RED');
+      editorState = EditorState.acceptSelection(editorState, selection);
+      this.previousHighlight = null;
+    }
+
+    if (selection.getStartOffset() === selection.getEndOffset()) {
+      console.log('cursor selection', selection);
+      this.socket.emit('cursorMove', selection);
+    } else {
+      console.log("highlight selection", selection);
+      editorState = RichUtils.toggleInlineStyle(editorState, 'RED');
+      this.previousHighlight = editorState.getSelection();
+      // TODO:::::
+      this.socket.emit('cursorMove', {selection});
+    }
+
+    const contentState = editorState.getCurrentContent();
+    // console.log("this is contentState", contentState);
+    // console.log("convertToRaw", convertToRaw(contentState));
+    const stringifiedContent = JSON.stringify(convertToRaw(contentState));
+    // console.log("stringifiedContent", stringifiedContent);
+    this.socket.emit('newContent', {stringifiedContent});
+    this.setState({editorState: editorState});
   }
 
   componentDidMount() {
     // console.log("editorview component did mount");
+    console.log("entering component did mount")
+    console.log("this is props id", this.props.match.params.id);
+
     var link = 'http://localhost:3000/currentdocument/' + this.props.match.params.id;
-    console.log("this is link", link);
+    // console.log("this is link", link);
     axios({
       method: 'GET',
       url: link,
@@ -49,6 +131,7 @@ class EditorView extends React.Component {
         this.setState({currentDocument: response.data.currentDocument});
         this.setState({editorState: EditorState.createWithContent(convertFromRaw(JSON.parse(response.data.currentDocument.content)))})
       } else {
+        // this.currentDocument = response.data.currentDocument;
         this.setState({
           currentDocument: response.data.currentDocument,
           editorState: EditorState.createEmpty()
@@ -57,26 +140,28 @@ class EditorView extends React.Component {
     })
   }
 
+  componentWillUnmount() {
+    this.socket.emit('disconnect');
+  }
+
   onSave() {
-    // console.log("this is state.currentDocument", this.state.currentDocument);
-    // console.log("this is currentContent", JSON.stringify(this.state.editorState.getCurrentContent()));
     axios({
-        method: 'POST',
-        url: 'http://localhost:3000/savedocument',
-        data: {
-            documentId: this.state.currentDocument._id,
-            content: JSON.stringify(convertToRaw(this.state.editorState.getCurrentContent()))
-        }
+      method: 'POST',
+      url: 'http://localhost:3000/savedocument',
+      data: {
+        documentId: this.state.currentDocument._id,
+        content: JSON.stringify(convertToRaw(this.state.editorState.getCurrentContent()))
+      }
     })
     .then(response => {
-        console.log(response);
-        if(response.data.success){
-            console.log('updated the document');
-        }
-        else {
-          console.log("Error saving document");
-        }
-      })
+      // console.log(response);
+      if(response.data.success){
+        console.log('Document saved');
+      }
+      else {
+        console.log("Error saving document");
+      }
+    })
 
   }
 
@@ -162,7 +247,7 @@ class EditorView extends React.Component {
         }
 
         applyIncreaseFontSize(shrink) {
-          console.log("test", shrink)
+          // console.log("test", shrink)
           var newFontSize = this.state.currentFontSize + (shrink ? -4 : 4);
           var newInlineStyles = Object.assign(
             {},
@@ -173,7 +258,7 @@ class EditorView extends React.Component {
               }
             }
           )
-          console.log("shrink", shrink)
+          // console.log("shrink", shrink)
           this.setState({
             inlineStyles: newInlineStyles,
             editorState: RichUtils.toggleInlineStyle(this.state.editorState, String(newFontSize)),
@@ -229,7 +314,7 @@ class EditorView extends React.Component {
                   ref="editor"
                   customStyleMap={this.state.inlineStyles}
                   editorState={this.state.editorState}
-                  onChange={this.onChange}
+                  onChange={(editorState) => this.onChange(editorState)}
                   blockRenderMap={myBlockTypes}
                 />
               </div>
@@ -237,6 +322,19 @@ class EditorView extends React.Component {
               <center>
               <FlatButton hoverColor='#B39DDB' onClick={() => this.onSave()}>S A V E</FlatButton>
             </center>
+              <div>
+//                 <FlatButton
+//                   onClick={() => this.onSave()}
+//                   label="Save">
+//                 </FlatButton>
+                <FlatButton
+                  fullWidth={false}
+                  onClick={() => this.onSave()}
+                  label="Save and Return to Menu"
+                  containerElement={<Link to="/portal" />}
+                  >
+                </FlatButton>
+              </div>
             </div>
           )
         }

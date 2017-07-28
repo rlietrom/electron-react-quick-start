@@ -139,6 +139,10 @@ class Portal extends React.Component {
 
                 </li>)
               }
+// =======
+//             <ul>
+//               {this.state.sharedDocs.map((document) => <li key={document._id}><Link to={"/editorview/" + document._id}>{document.title}</Link></li>)}
+// >>>>>>> master
             </ul>
             <TextField
               type="text"
