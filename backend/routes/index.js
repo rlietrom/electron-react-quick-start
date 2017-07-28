@@ -86,7 +86,7 @@ router.post('/savedocument', function(req, res){
   .then((doc) => {
       doc.history.push({time: req.body.time, content: req.body.content})
     doc.content = req.body.content
-    console.log('HISTROY', doc.history)
+    // console.log('HISTROY', doc.history)
     doc.save(function(err){
       if(err){
         console.log(err)
