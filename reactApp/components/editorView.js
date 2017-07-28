@@ -313,7 +313,7 @@ class EditorView extends React.Component {
                 />
               </div>
               <br/>
-              <div>
+              <div class="buttonDiv">
               <FlatButton
                 label="Save"
                 fullWidth={false}
