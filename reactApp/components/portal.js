@@ -81,7 +81,6 @@ class Portal extends React.Component {
       console.log("this is response from server", response);
       if(response.data.success) {
         console.log("inside success");
-
         this.componentDidMount();
       }
       else {}
@@ -136,13 +135,8 @@ class Portal extends React.Component {
                     containerElement={<Link to="/editorview">{document.title}</Link>}
                     >
                   </FlatButton>
-
                 </li>)
               }
-// =======
-//             <ul>
-//               {this.state.sharedDocs.map((document) => <li key={document._id}><Link to={"/editorview/" + document._id}>{document.title}</Link></li>)}
-// >>>>>>> master
             </ul>
             <TextField
               type="text"

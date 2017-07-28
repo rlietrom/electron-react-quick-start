@@ -1,13 +1,15 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-var injectTapEventPlugin = require('react-tap-event-plugin')
+var injectTapEventPlugin = require('react-tap-event-plugin');
+import {List, ListItem, makeSelectable} from 'material-ui/List';
 // var EditorView = require('./components/editorView');
 import {Switch, Redirect, Route, HashRouter, BrowserRouter} from 'react-router-dom';
 var EditorView = require('./components/editorView');
 var Login = require('./components/login');
 var Registration = require('./components/registration');
 var Portal = require('./components/portal');
+import HistoryList from './components/historyView';
 require('./styles/main.css')
 // import EditorView from './components/editorView'
 
@@ -29,6 +31,7 @@ ReactDOM.render(
         <Route path='/register' component={Registration}/>
         <Route path='/portal' component={Portal}/>
         <Route path='/editorview/:id' component={EditorView}/>
+        <Route path='/history' component={HistoryList}/>
      </div>
     </MuiThemeProvider>
   </HashRouter>,

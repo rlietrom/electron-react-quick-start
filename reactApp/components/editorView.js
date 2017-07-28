@@ -12,6 +12,7 @@ import { Popover }  from 'material-ui/Popover';
 import styles from '../styles/main.css';
 import {Redirect, Link} from 'react-router-dom';
 var axios = require('axios');
+var HistoryList = require('./historyView');
 var io = require('socket.io-client'); //client side socket connection
 
 
@@ -320,18 +321,24 @@ class EditorView extends React.Component {
               </div>
               <br/>
               <center>
-              <FlatButton hoverColor='#B39DDB' onClick={() => this.onSave()}>S A V E</FlatButton>
-            </center>
+                <FlatButton hoverColor='#B39DDB' onClick={() => this.onSave()}>S A V E</FlatButton>
+              </center>
               <div>
-//                 <FlatButton
-//                   onClick={() => this.onSave()}
+{/* //                 <FlatButton */}
+{/* //                   onClick={() => this.onSave()}
 //                   label="Save">
-//                 </FlatButton>
+//                 </FlatButton> */}
                 <FlatButton
                   fullWidth={false}
                   onClick={() => this.onSave()}
                   label="Save and Return to Menu"
                   containerElement={<Link to="/portal" />}
+                  >
+                </FlatButton>
+                <FlatButton
+                  fullWidth={false}
+                  label="Version Histories"
+                  containerElement={<Link to="/history" />}
                   >
                 </FlatButton>
               </div>

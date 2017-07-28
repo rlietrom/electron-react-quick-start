@@ -116,7 +116,7 @@ router.get('/usershareddocuments', function(req, res){
       return Document.findById(id)
     })
     Promise.all(arrayPromises).then((results) => {
-      console.log("this is results", results);
+      console.log("this is promiseArray results", results);
       res.json({success: true, sharedDocs: results})
     })
   })
