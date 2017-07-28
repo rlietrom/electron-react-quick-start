@@ -55,6 +55,7 @@ router.post('/newcollaborator', function(req, res){
 
   Document.findById(req.body._id)
   .then((doc) => {
+    console.log('REQ USER', req.user)
     doc.collaborators.push(req.user._id)
     doc.save(function(err, doc){
       if(err){
@@ -67,7 +68,7 @@ router.post('/newcollaborator', function(req, res){
             if(err){
               console.log(err)
             } else {
-              res.json({success: true, user: ussr});
+              res.json({success: true, doc: doc, user: ussr});
             }
           })
         })

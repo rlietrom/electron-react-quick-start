@@ -32,7 +32,7 @@ class EditorView extends React.Component {
       editorState: EditorState.createEmpty(),
       inlineStyles: {},
       currentFontSize: 12,
-      currentDocument: {}
+      currentDocument: {},
     }
     // console.log("this is props id", this.props.match.params.id);
     // this.currentFontSize = 12;
@@ -313,18 +313,22 @@ class EditorView extends React.Component {
                 />
               </div>
               <br/>
-              <center>
-              <FlatButton hoverColor='#B39DDB' onClick={() => this.onSave()}>S A V E</FlatButton>
-            </center>
               <div>
-                <FlatButton
-                  fullWidth={false}
-                  onClick={() => this.onSave()}
-                  label="Back"
-                  containerElement={<Link to="/portal" />}
-                  >
+              <FlatButton
+                label="Save"
+                fullWidth={false}
+                onClick={() => this.onSave()}>
                 </FlatButton>
-              </div>
+              <FlatButton
+                fullWidth={false}
+                onClick={() => this.onSave()}
+                label="Back"
+                containerElement={<Link to="/portal" />}
+                >
+              </FlatButton>
+              <h4>SHARE THIS DOC ID: {this.state.currentDocument._id}</h4>
+            </div>
+
             </div>
           )
         }
