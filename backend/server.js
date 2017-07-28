@@ -67,13 +67,6 @@ passport.use(new LocalStrategy(function(username, password, done) {
 app.use('/', auth(passport));
 app.use('/', routes);
 
-
-
-
-
-
-
-
 io.on('connection', socket => {
 
   socket.on('join', ({docId}) => {
@@ -92,7 +85,11 @@ io.on('connection', socket => {
   })
 
   socket.on('newContent', ({stringifiedContent}) => {
-    socket.broadcast.to(socket.theOneRoom).emit('receiveNewContent', {stringifiedContent: stringifiedContent});
+    socket.broadcast.to(socket.theOneRoom).emit('receiveNewContent', {stringifiedContent});
+  })
+
+  socket.on('cursorMove', ({selection}) => {
+    socket.broadcast.to(socket.theOneRoom).emit('receiveNewCursor', {selection});
   })
 
   //Json ships data, can destructure it with:

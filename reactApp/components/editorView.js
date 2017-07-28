@@ -10,7 +10,6 @@ import FlatButton from 'material-ui/FlatButton';
 import FontIcon from 'material-ui/FontIcon';
 import { Popover }  from 'material-ui/Popover';
 import styles from '../styles/main.css';
-// var Link = require('react-router-dom');
 import {Redirect, Link} from 'react-router-dom';
 var axios = require('axios');
 var io = require('socket.io-client'); //client side socket connection
@@ -35,39 +34,11 @@ class EditorView extends React.Component {
       currentFontSize: 12,
       currentDocument: {}
     }
-    // this.onChange = (editorState) => {
-    //   // const selection = editorState.getSelection();
-    //   //
-    //   // if(this.previousHighlight){
-    //   //   editorState = EditorState.acceptSelection(editorState, this.previousHighlight);
-    //   //   editorState = RichUtils.toggleInlineStyle(editorState, 'RED');
-    //   //   editorState = EditorState.acceptSelection(editorState, selection);
-    //   // }
-    //   //
-    //   // editorState = RichUtils.toggleInlineStyle(editorState, 'RED');
-    //   // this.previousHighlight = editorState.getSelection();
-    //
-    //   // if(selection.getStartOffset() !== selection.getEndOffset()) {
-    //   //
-    //   // }
-    //
-    //   var contentState = editorState.getCurrentContent();
-    //   // console.log("this is contentState inside onChange", contentState);
-    //   var stringifiedContent = JSON.stringify(convertToRaw(contentState));
-    //   // console.log("this is stringifiedContent iside onChange", stringifiedContent);
-    //
-    //   //these two lines TODO:
-    //   var newEditorState = EditorState.createWithContent(contentState)
-    //   this.setState({editorState: newEditorState});
-    //
-    //   this.socket.emit('newContent', {stringifiedContent: stringifiedContent});
-    // };
-    console.log("this is props id", this.props.match.params.id);
-    //these are async
+    // console.log("this is props id", this.props.match.params.id);
+    this.previousHighlight = null;
     this.socket = io('http://localhost:3000');
-    //set up the listener before the emitter
-    //to prevent race conditions, and a helloback returning
-    //before you set up the helloback listener
+    //set up the listener before the emitter to prevent race conditions, and a
+    //helloback returning before you set up the helloback listener
     this.socket.on('helloBack', () => {
       console.log("hello back");
     })
@@ -78,31 +49,64 @@ class EditorView extends React.Component {
       console.log("user left");
     })
     this.socket.on('receiveNewContent', ({stringifiedContent}) => {
-      console.log(stringifiedContent);
+      console.log("incoming receiveNewContent stringifiedContent", stringifiedContent);
+
       var contentState = convertFromRaw(JSON.parse(stringifiedContent));
       var newEditorState = EditorState.createWithContent(contentState);
       this.setState({editorState: newEditorState});
     })
-    // this.socket.emit('hello', {'name': 'ryan'});
+    this.socket.on('receiveNewCursor', incomingSelectionObj => {
+      console.log('incoming receiveNewCursor object', incomingSelectionObj);
+      let editorState = this.state.editorState;
+      const ogEditorState = editorState;
+      const ogSelection = editorState.getSelection();
+
+      const incomingSelectionState = ogSelection.merge(incomingSelectionObj);
+
+      const temporaryEditorState = EditorState.forceSelection(ogEditorState, incomingSelectionState);
+
+      this.setState({ editorState : temporaryEditorState}, () => {
+        //callback for once the state is set bc setState is kindof asynchronous
+       const winSel = window.getSelection();
+       const range = winSel.getRangeAt(0);
+       const rects = range.getClientRects()[0];
+       console.log("range", range);
+       console.log("rects", rects);
+       const { top, left, bottom } = rects;
+       this.setState({ editorState: ogEditorState, top, left, height: bottom - top});
+     });
+
+   });
     //docId could be props, but I use the result of the axios request in componentDidMont
     //...which could be a problem
-    this.socket.emit('join', {'docId': this.props.match.params.id})
-    //TODO: in componentWillUnmount we put a this.socket.emit('dicsonnect') event emitter or this.socket.disconnect();
+    this.socket.emit('join', {'docId': this.props.match.params.id});
   }
 
   onChange(editorState) {
-    // const contentState = editorState.getCurrentContent();
-    // this.setState({editorState});
-    var contentState = editorState.getCurrentContent();
-    var stringifiedContent = JSON.stringify(convertToRaw(contentState));
-    // console.log("this is stringifiedContent iside onChange", stringifiedContent);
+    const selection = editorState.getSelection();
 
-    //these two lines TODO:
-    var newEditorState = EditorState.createWithContent(contentState)
-    this.setState({editorState: newEditorState});
+    if (this.previousHighlight) {
+      editorState = EditorState.acceptSelection(editorState, this.previousHighlight);
+      editorState = RichUtils.toggleInlineStyle(editorState, 'RED');
+      editorState = EditorState.acceptSelection(editorState, selection);
+      this.previousHighlight = null;
+    }
 
-    this.socket.emit('newContent', {stringifiedContent: stringifiedContent});
+    if (selection.getStartOffset() === selection.getEndOffset()) {
+      console.log('cursor selection', selection);
+      this.socket.emit('cursorMove', selection);
+    } else {
+      editorState = RichUtils.toggleInlineStyle(editorState, 'RED');
+      this.previousHighlight = editorState.getSelection();
+    }
 
+    const contentState = editorState.getCurrentContent();
+    // console.log("this is contentState", contentState);
+    // console.log("convertToRaw", convertToRaw(contentState));
+    const stringifiedContent = JSON.stringify(convertToRaw(contentState));
+    // console.log("stringifiedContent", stringifiedContent);
+    this.socket.emit('newContent', {stringifiedContent});
+    this.setState({editorState});
   }
 
   componentDidMount() {
@@ -134,8 +138,6 @@ class EditorView extends React.Component {
   }
 
   onSave() {
-    // console.log("this is state.currentDocument", this.state.currentDocument);
-    // console.log("this is currentContent", JSON.stringify(this.state.editorState.getCurrentContent()));
     axios({
       method: 'POST',
       url: 'http://localhost:3000/savedocument',
@@ -309,20 +311,8 @@ class EditorView extends React.Component {
               <div>
                 <FlatButton
                   onClick={() => this.onSave()}
-                  label="Save"></FlatButton>
-                {/* <FlatButton
-                  label="Save and return to menu"
-                  containerElement={<Link to='/portal'/>}
-                  linkButton={true}
-                  ></FlatButton> */}
-                {/* <FlatButton
-                  fullWidth={false}
-                  hoverColor='#B39DDB'
-                  label="Save and Back to Menu"
-                  containerElement={<Link to="/portal" />}
-                  >
-
-                </FlatButton> */}
+                  label="Save">
+                </FlatButton>
                 <FlatButton
                   fullWidth={false}
                   onClick={() => this.onSave()}
