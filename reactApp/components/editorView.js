@@ -57,7 +57,7 @@ class EditorView extends React.Component {
       this.setState({editorState: newEditorState});
     })
     this.socket.on('receiveNewCursor', incomingSelectionObj => {
-      console.log('incoming selection object', incomingSelectionObj);
+      // console.log('incoming selection object', incomingSelectionObj);
 
       let editorState = this.state.editorState;
       const ogEditorState = editorState;
@@ -96,7 +96,7 @@ class EditorView extends React.Component {
     }
 
     if (selection.getStartOffset() === selection.getEndOffset()) {
-      console.log('cursor selection', selection);
+      // console.log('cursor selection', selection);
       this.socket.emit('cursorMove', selection);
     } else {
       console.log("highlight selection", selection);
@@ -318,14 +318,21 @@ class EditorView extends React.Component {
                 label="Save"
                 fullWidth={false}
                 onClick={() => this.onSave()}>
-                </FlatButton>
+               </FlatButton>
               <FlatButton
                 fullWidth={false}
                 onClick={() => this.onSave()}
                 label="Back"
-                containerElement={<Link to="/portal" />}
+                containerElement={<Link to={"/portal/:" + this.props.match.params.id}/>}
                 >
               </FlatButton>
+              <FlatButton
+                fullWidth={false}
+                onClick={() => this.onSave()}
+                label="Version Histories"
+                containerElement={<Link to={"/history/" + this.props.match.params.id}/>}
+                >
+                 </FlatButton>
               <h4>SHARE THIS DOC ID: {this.state.currentDocument._id}</h4>
             </div>
 
