@@ -44,11 +44,13 @@ class Registration extends React.Component {
         <div>
           <center>
             <br/><br/>
-          <h1 style={{'font-family': 'verdana'}}>C U R L D O C S</h1>
-          <h3 style={{'font-family': 'verdana'}}>REGISTER</h3>
+          <h1> C U R L D O C S</h1>
+          <h3>REGISTER</h3>
           <TextField
             id="text-field-default"
             floatingLabelText="username"
+            floatingLabelStyle={{'color': '#B39DDB'}}
+            underlineFocusStyle={{'borderBottom': 'solid #000000'}}
             onChange={(event) => this.setState({username: event.target.value })}
             type="text"
             name="username">
@@ -57,6 +59,8 @@ class Registration extends React.Component {
           <TextField
             id="text-field-default"
             floatingLabelText="password"
+            floatingLabelStyle={{'color': '#B39DDB'}}
+            underlineFocusStyle={{'borderBottom': 'solid #000000'}}
             onChange={(event) => this.setState({password: event.target.value})}
             type="password"
             name="password">
@@ -64,10 +68,12 @@ class Registration extends React.Component {
               <br/> <br/> <br/>
           <FlatButton
             style={{'display': 'flex'}}
+            hoverColor='#B39DDB'
             label="register"
             onClick={() => this.onSubmit()}></FlatButton>
           <FlatButton
             fullWidth={false}
+            hoverColor='#B39DDB'
             label="back to login"
             containerElement={<Link to="/login" />}
             >
