@@ -97,6 +97,7 @@ class EditorView extends React.Component {
       return (
         <FlatButton
           fullWidth={false}
+          hoverColor='#B39DDB'
           backgroundColor={this.state.editorState.getCurrentInlineStyle().has(style) ? 'WhiteSmoke' : 'white'}
           onMouseDown={(e) => this.toggleFormat(e, style, block)}
           icon={<FontIcon className="material-icons">{icon}</FontIcon>}
@@ -141,6 +142,7 @@ class EditorView extends React.Component {
           <FlatButton
             fullWidth={false}
             label=""
+            hoverColor='#B39DDB'
             onClick={this.openColorPicker.bind(this)}
             icon={<FontIcon className="material-icons">format_paint</FontIcon>}
           />
@@ -183,6 +185,7 @@ class EditorView extends React.Component {
           return (
             <FlatButton
               fullWidth={false}
+              hoverColor='#B39DDB'
               label=""
               onMouseDown={this.applyIncreaseFontSize.bind(this, shrink)}
               icon={<FontIcon className="material-icons">{shrink ? 'zoom_in' : 'zoom_out'}</FontIcon>}
@@ -230,7 +233,10 @@ class EditorView extends React.Component {
                   blockRenderMap={myBlockTypes}
                 />
               </div>
-              <FlatButton onClick={() => this.onSave()}>Save Document</FlatButton>
+              <br/>
+              <center>
+              <FlatButton hoverColor='#B39DDB' onClick={() => this.onSave()}>S A V E</FlatButton>
+            </center>
             </div>
           )
         }

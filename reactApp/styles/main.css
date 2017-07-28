@@ -4,8 +4,10 @@ body {
 }
 
 .toolbar {
+  margin-left: 12em;
   background-color: white;
-  padding: 5px;
+  padding: 15px;
+  padding-bottom: 20px;
 }
 
 .right-align {
@@ -17,10 +19,14 @@ body {
 }
 
 .editor {
+  background-color: #D1C4E9;
   border-style: double;
   border-color: 'black';
-  min-height: 500px;
-  padding: 10px;
+  min-height: 300px;
+  padding: 15px;
+  margin: 50px;
+  margin-top: 0;
+  margin-bottom: 0;
   min-width: 300px;
   border-width: 1px;
 }

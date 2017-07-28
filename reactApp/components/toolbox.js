@@ -14,6 +14,7 @@ class Toolbox extends React.Component {
   render() {
     return(
       <div>
+        <center>
         <button onClick={() => this.props.clickHandler("BOLD")}>B</button>
         <button onClick={() => this.props.clickHandler("ITALIC")}>I</button>
         <button onClick={() => this.props.clickHandler("UNDERLINE")}>U</button>
@@ -26,6 +27,7 @@ class Toolbox extends React.Component {
         {/* <button onClick={() => this.props.toggleBulletPoints()}>bullets</button> */}
         <button onClick={() => this.props.clickHandler("bullets")}>bullets</button>
         <div>This is toolbox</div>
+      </center>
       </div>
     )
   }

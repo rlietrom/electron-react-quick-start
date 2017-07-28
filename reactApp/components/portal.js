@@ -96,7 +96,7 @@ class Portal extends React.Component {
           <h1>C U R L D O C S</h1>
           </center>
           <br/> <br/> <br/> <br/>
-          <span>
+          <div style={{'padding': '35'}}>
           <h3>MAKE A DOC</h3>
           <TextField
             type="text"
@@ -115,13 +115,13 @@ class Portal extends React.Component {
             onClick={() => this.createNewDocument()}
           >
           </FlatButton>
-          </span>
+        </div>
 
           <div id="shared" style={{
             'float':'right',
             'position': 'absolute',
             'left': '60%',
-            'top': '14%'
+            'top': '18%'
                 }}>
             <br/>
             <h3>SHARED DOCS</h3>
@@ -159,8 +159,9 @@ class Portal extends React.Component {
             </FlatButton>
           </div>
 
-          <div>
-            <br/> <br/>
+
+            <br/> <br/> <br/>
+            <center>
             <h3>YOUR DOCS</h3>
             <ul style={{'listStyleType': 'none', 'margin': '0', 'padding': '0'}}>
               {this.state.docs.map((document) =>
@@ -174,8 +175,8 @@ class Portal extends React.Component {
                   </FlatButton>
               </li>)}
             </ul>
-          </div>
 
+          </center>
         </div>
       </HashRouter>
     )
