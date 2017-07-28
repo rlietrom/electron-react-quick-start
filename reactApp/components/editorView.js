@@ -247,7 +247,6 @@ class EditorView extends React.Component {
         }
 
         applyIncreaseFontSize(shrink) {
-          // console.log("test", shrink)
           var newFontSize = this.state.currentFontSize + (shrink ? -4 : 4);
           var newInlineStyles = Object.assign(
             {},
@@ -258,7 +257,6 @@ class EditorView extends React.Component {
               }
             }
           )
-          // console.log("shrink", shrink)
           this.setState({
             inlineStyles: newInlineStyles,
             editorState: RichUtils.toggleInlineStyle(this.state.editorState, String(newFontSize)),
