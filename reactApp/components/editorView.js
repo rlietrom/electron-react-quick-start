@@ -323,10 +323,6 @@ class EditorView extends React.Component {
               <FlatButton hoverColor='#B39DDB' onClick={() => this.onSave()}>S A V E</FlatButton>
             </center>
               <div>
-//                 <FlatButton
-//                   onClick={() => this.onSave()}
-//                   label="Save">
-//                 </FlatButton>
                 <FlatButton
                   fullWidth={false}
                   onClick={() => this.onSave()}
