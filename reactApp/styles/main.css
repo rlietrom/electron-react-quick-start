@@ -4,7 +4,6 @@ body {
 }
 
 .toolbar {
-  margin-left: 12em;
   background-color: white;
   padding: 15px;
   padding-bottom: 20px;
@@ -42,4 +41,11 @@ body {
   border-bottom-style: solid;
   padding-bottom: 15px;
   margin-bottom: 15px;
+}
+
+.buttonDiv {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-direction: row;
+  flex-direction: row;
 }
