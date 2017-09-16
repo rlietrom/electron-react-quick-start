@@ -62,8 +62,9 @@ class Login extends React.Component {
             underlineFocusStyle={{'borderBottom': 'solid #000000'}}
             onChange={(e) => this.setState({username: e.target.value})}
             type="text"
-            name="username"
-          /><br />
+            name="username">
+          </TextField>
+          <br />
           <TextField
             hintText="password"
             floatingLabelText="password"
@@ -72,17 +73,18 @@ class Login extends React.Component {
             onChange={(e) => this.setState({password: e.target.value})}
             type="password"
             name="password"
-          /><br /><br/>
-
+          >
+          </TextField>
+          <br /><br/><br/>
           <FlatButton
             style={{'display': 'flex'}}
             fullWidth={false}
             hoverColor='#B39DDB'
             label="Login"
             onClick={() => this.onSubmit()}
-          />
+          ></FlatButton>
           <FlatButton
-            style={{'display': 'flex'}}
+            // style={{'display': 'flex'}}
             fullWidth={false}
             hoverColor='#B39DDB'
             label="Register"

@@ -9,6 +9,7 @@ import { Toolbar }from 'material-ui/Toolbar';
 import FlatButton from 'material-ui/FlatButton';
 import FontIcon from 'material-ui/FontIcon';
 import { Popover }  from 'material-ui/Popover';
+import Subheader from 'material-ui/Subheader';
 import styles from '../styles/main.css';
 import {Redirect, Link} from 'react-router-dom';
 var axios = require('axios');
@@ -148,6 +149,7 @@ class EditorView extends React.Component {
         })
       }
     })
+
   }
 
   componentWillUnmount() {
@@ -197,20 +199,75 @@ class EditorView extends React.Component {
       />
     )
   }
+  //
+  // openColorPicker(e) {
+  //   this.setState({
+  //     colorPickerOpen: true,
+  //     colorPickerButton: e.target
+  //   })
+  // }
+  //
+  // closeColorPicker(e) {
+  //   this.setState({
+  //     colorPickerOpen: false,
+  //     // colorPickerButton: e.target()
+  //   })
+  // }
+  //
+  //   formatColor(color) {
+  //     var newInlineStyles = Object.assign(
+  //       {},
+  //       this.state.inlineStyles,
+  //       {
+  //         [color.hex]: {
+  //           color: color.hex
+  //         }
+  //       }
+  //     )
+  //     this.setState({
+  //       inlineStyles: newInlineStyles,
+  //       editorState: RichUtils.toggleInlineStyle(this.state.editorState, color.hex),
+  //       color: color
+  //     })
+  //   }
+  //
+  //   colorPicker() {
+  //     return(
+  //       <div style={{display: 'inline-block'}}>
+  //         <FlatButton
+  //           fullWidth={false}
+  //           label=""
+  //           onClick={this.openColorPicker.bind(this)}
+  //           icon={<FontIcon className="material-icons">format_paint</FontIcon>}
+  //         />
+  //         <Popover
+  //           open={this.state.colorPickerOpen}
+  //           anchorEl={this.state.colorPickerButton}
+  //           anchorOrigin={{horizontal: 'left', vertical: 'bottom'}}
+  //           targetOrigin={{horizontal: 'left', vertical: 'top'}}
+  //           onRequestClose={this.closeColorPicker.bind(this)}
+  //           >
+  //             <ChromePicker
+  //               color={ this.state.color }
+  //               onChangeComplete={this.formatColor.bind(this)}/>
+  //             </Popover>
+  //           </div>
+  //         )
+  //       }
 
   openColorPicker(e) {
-    this.setState({
-      colorPickerOpen: true,
-      colorPickerButton: e.target
-    })
-  }
+      this.setState({
+        colorPickerOpen: true,
+        colorPickerButton: e.target
+      })
 
-  closeColorPicker(e) {
-    this.setState({
-      colorPickerOpen: false,
-      // colorPickerButton: e.target()
-    })
-  }
+    }
+    closeColorPicker(e) {
+      this.setState({
+        colorPickerOpen: false,
+        // colorPickerButton: e.target()
+      })
+    }
 
     formatColor(color) {
       var newInlineStyles = Object.assign(
@@ -325,10 +382,10 @@ class EditorView extends React.Component {
                 />
               </div>
               <div>
-                <FlatButton
+                {/* <FlatButton
                   onClick={() => this.onSave()}
                   label="Save">
-                </FlatButton>
+                </FlatButton> */}
                 <FlatButton
                   fullWidth={false}
                   onClick={() => this.onSave()}
@@ -336,6 +393,7 @@ class EditorView extends React.Component {
                   containerElement={<Link to="/portal" />}
                   >
                   </FlatButton>
+                  <Subheader>Shareable ID: {this.props.match.params.id}</Subheader>
                 </div>
               </div>
             )
