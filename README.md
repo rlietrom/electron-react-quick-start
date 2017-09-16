@@ -29,6 +29,8 @@ Using a UI framework is incredible for spending minimal time on UI and barely to
 
 Backend stuff: Hella routes and object manipulation is necessary for tracking a user, its documents (original and shared), and its document's contents. We ended up making a sharedDocs: {} object on each user to track which documents it's added to its collection. Documents are shared and access by the document's unique ID given by MongoDB. Nothing too crazy here and passport authorization was long as usual. 
 
+Websockets were used to allow two separate users to see a document as the other is changing it. Includes highlighting, typing, and cursor. 
+
 Git flow and teamwork: went so smoothly! This time, we all had gone through working on a big project with a team so git flow wasn't crazy and the delegation was equal. Pull Requests and standups every few hours were key. 
 
 ## Clone it yourself
