@@ -32,11 +32,11 @@ Backend stuff: Hella routes and object manipulation is necessary for tracking a 
 Git flow and teamwork: went so smoothly! This time, we all had gone through working on a big project with a team so git flow wasn't crazy and the delegation was equal. Pull Requests and standups every few hours were key. 
 
 ## Clone it yourself
-*get Electron*
-git clone this repo
-npm install
-npm run dev
-*refresh*
+*get Electron*, 
+git clone this repo,
+npm install,
+npm run dev,
+*refresh*,
 *and there you have it!*
 
 ## Authors
